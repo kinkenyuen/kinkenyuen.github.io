@@ -266,7 +266,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-02 16:41:52" itemprop="dateModified" datetime="2020-01-02T16:41:52+08:00">2020-01-02</time>
+                <time title="修改时间：2020-01-02 16:56:45" itemprop="dateModified" datetime="2020-01-02T16:56:45+08:00">2020-01-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -295,7 +295,7 @@
 <p>学习逆向有一段时间了，想着写个iOS Jailbreak Tweak练练手，平时比较喜欢看视频，看到比较搞笑的视频想保存下载发给好友，无奈无法下载，于是有了这个<strong>VideoDownloaderCN</strong>插件。</p>
 <p><strong>声明 ： 插件仅用于技术研究</strong></p>
 <div align=center>
-    <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/tweak.png" width=30% />
+    <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/tweak.png" width=50% />
     <br>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
         display: inline-block;
@@ -316,22 +316,22 @@
 <h2 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h2><blockquote>
 <p><code>nic.pl</code></p>
 </blockquote>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/creat_tweak.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">创建插件</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/creat_tweak.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">创建插件</div> </div>
 
 <blockquote>
 <p>目录介绍</p>
 </blockquote>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/mulu.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">目录介绍</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/mulu.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">目录介绍</div> </div>
 
 <blockquote>
 <p>Makefile</p>
 </blockquote>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/makefile.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">makefile</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/makefile.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">makefile</div> </div>
 
 <blockquote>
 <p>Tweak.xm</p>
 </blockquote>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/tweakxm.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">xm</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/tweakxm.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">xm</div> </div>
 
 <p>此处我使用了多个xm文件来区分每个App的注入代码，具体查看<a href="https://github.com/kinkenyuen/VideoDownloaderCN" target="_blank" rel="noopener">github</a></p>
 <blockquote>
@@ -340,15 +340,15 @@
 <div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/plist.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">plist</div> </div>
 
 <h2 id="编译Tweak"><a href="#编译Tweak" class="headerlink" title="编译Tweak"></a>编译Tweak</h2><p>做好了基础配置以及编写好xm之后，就可以通过<code>make</code>命令编译，我遇到了一个错误，如下：</p>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/makeerror.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">编译错误</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/makeerror.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">编译错误</div> </div>
 
 <p>修改<code>Makefile</code>再次编译</p>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/xiugaimakefile.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">修改编译设置</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/xiugaimakefile.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">修改编译设置</div> </div>
 
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/makesuccess.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">再次编译</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/makesuccess.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">再次编译</div> </div>
 
 <p><code>make package</code>生成deb</p>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/makepackage.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">makepackage</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/makepackage.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">makepackage</div> </div>
 
 <h2 id="安装Tweak"><a href="#安装Tweak" class="headerlink" title="安装Tweak"></a>安装Tweak</h2><p><code>make install</code>命令安装到设备,安装前需要配置一些必要参数,将以下两行参数配置到<code>Makefile</code>是一种方法，意思是通过本地USB方式，端口2222安装到手机，我的做法是配置好写在<code>.bash_profile</code>或<code>.zshrc</code>内，这样不用每次在<code>Makefile</code>内编写（重要提示：出现Error请详细检查theos配置，手机IP、端口是否映射，ssh是否正常登陆）</p>
 <blockquote>
@@ -361,13 +361,13 @@
 <li>可以使用<code>scp</code>命令传到手机端，接着手机终端<code>dpkg -i</code>安装,具体做法请自行搜索详细教程。</li>
 </ol>
 <p>至此，一个Tweak在iOS越狱设备上</p>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/install.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">安装</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/install.jpeg" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">安装</div> </div>
 
 <h1 id="插件设置项Preference-Bundle"><a href="#插件设置项Preference-Bundle" class="headerlink" title="插件设置项Preference Bundle"></a>插件设置项Preference Bundle</h1><p>一个<code>tweak</code>可能要设置一些选项，就像<code>App Store上</code>的<code>App</code>一样，在设置应用里面可以设置，在<code>theos</code>里，可以通过创建<code>Preference Bundle</code>来为插件提供设置界面,有点类似于<code>Xcode</code>里的<code>Setting Bundle</code>,<code>Preference Bundle</code>安装到手机后会在<code>/Library/PreferenceBundles/</code>目录生成一个对应的<code>bundle</code>,此<code>bundle</code>会基于<code>PreferenceLoader</code>注入到设置应用(<code>Setting.app</code>)，而<code>PreferenceLoader</code>是由Dustin Howett开发的基于<code>Mobile Substrate</code>的工具，主要为插件在系统设置界面添加一个设置入口。</p>
 <h2 id="为插件创建Preference-Bundle"><a href="#为插件创建Preference-Bundle" class="headerlink" title="为插件创建Preference Bundle"></a>为插件创建Preference Bundle</h2><p>一般的做法为：在原插件目录使用<code>theos</code>创建</p>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/createprefs.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">创建PreferenceBundle</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/createprefs.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">创建PreferenceBundle</div> </div>
 
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/prefssubproject.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">PreferenceBundle sub project</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/prefssubproject.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">PreferenceBundle sub project</div> </div>
 
 <p>创建<code>preference bundle</code>后新生成目录下的文件介绍如下:</p>
 <table>
@@ -412,9 +412,7 @@
 <p>网上关于<code>Preference Bundle</code>的用法中文介绍很少，我是结合<code>iPhonewiki</code>、视频以及一些开源插件的<code>Preference Bundle</code>配置学习，真的是花了不少时间<del>~</del>,具体的配置我不放上来了，可以去我的<a href="https://github.com/kinkenyuen/VideoDownloaderCN" target="_blank" rel="noopener">github</a>看一下，我尽量注释说明了配置的含义。</p>
 <p>推荐一个开源插件Repo：<a href="https://github.com/LacertosusRepo/Open-Source-Tweaks" target="_blank" rel="noopener">Open-Source-Tweaks</a></p>
 <h1 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h1><p><code>theos</code>创建<code>preference bundle</code>后编译不通过,原因是<code>theos</code>找不到对应的库</p>
-<img src="http://q3gj0uwol.bkt.clouddn.com/static/images/theoskeng.png">
-
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/theoskeng.png" width="375" />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">找不到私有库</div> </div>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/theoskeng.png" width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">找不到私有库</div> </div>
 
 <p>解决方法:<br>手动下载<code>theos</code>需要的<code>sdks</code>，网上已经有人<code>Patch</code>好了，将从<a href="https://github.com/theos/sdks" target="_blank" rel="noopener">theos sdks</a>下载的<code>sdks</code>放到<code>theos</code>的<code>/sdks</code>目录下。</p>
 <p>再次编译还是错误,原因是目前Xcode10.1已经使用iOS12.1的sdks，搜了一番没有找到<code>theos</code>用的，于是我将插件支持版本调低一点,可以编译通过,<code>Tweak</code>的<code>Makefile</code>添加:</p>
