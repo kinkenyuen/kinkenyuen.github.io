@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>类Reveal视图分析App——Lookin</title>
+    <url>/2020/01/04/%E7%B1%BBReveal%E8%A7%86%E5%9B%BE%E5%88%86%E6%9E%90App%E2%80%94%E2%80%94Lookin/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="https://lookin.work/" target="_blank" rel="noopener">Lookin</a>是一个免费的iOS UI层次分析App，相比Reveal,它不仅能获取视图控件对应的成员变量名称，而且可以做一些简单的UI之外的动态调试</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>Mac端直接从官网下载App即可</p>
+<h1 id="iPhone端"><a href="#iPhone端" class="headerlink" title="iPhone端"></a>iPhone端</h1><p>配合越狱设备使用更快捷,类似于Reveal，使用越狱插件为目标App注入<code>LookinServer.framework</code></p>
+<p><a href="https://github.com/creantan/LookinLoader" target="_blank" rel="noopener">LookinLoader</a></p>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/Lookin.jpg" width=50% />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">Lookin</div> </div>]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>简单配置iTerm2与Zsh</title>
     <url>/2020/01/04/%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AEiTerm2%E4%B8%8EZsh/</url>
     <content><![CDATA[<h1 id="iTerm2"><a href="#iTerm2" class="headerlink" title="iTerm2"></a>iTerm2</h1><p><a href="https://iterm2.com/" target="_blank" rel="noopener">iTerm2</a></p>
