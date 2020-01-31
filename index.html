@@ -235,6 +235,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/31/MacOS%E5%88%86%E4%BA%AB%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86%E7%BB%99%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B6%E4%BB%96%E8%AE%BE%E5%A4%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/31/MacOS%E5%88%86%E4%BA%AB%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86%E7%BB%99%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B6%E4%BB%96%E8%AE%BE%E5%A4%87/" class="post-title-link" itemprop="url">MacOS分享全局代理给局域网其他设备</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-01-31 21:42:22 / 修改时间：22:36:44" itemprop="dateCreated datePublished" datetime="2020-01-31T21:42:22+08:00">2020-01-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MacOS/" itemprop="url" rel="index">
+                    <span itemprop="name">MacOS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="为什么要这么做"><a href="#为什么要这么做" class="headerlink" title="为什么要这么做"></a>为什么要这么做</h1><p>在出租屋里的路由器配置了SSR，所有设备科学上网已经很方便了，回到老家后。出现了一些需要科学上网的场景却又很难实现，比如玩switch游戏时需要科学上网，懵逼了。于是想到了自己的MBP有SSR，能开启全局代理然后分享出来吗？</p>
+<h1 id="正题"><a href="#正题" class="headerlink" title="正题"></a>正题</h1><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>这个方法实现了的效果是，同一局域网内的设备使用MBP上的全局代理，这里不说SSR怎么配置。</p>
+<p>下载安装<a href="http://www.privoxy.org/sf-download-mirror/" target="_blank" rel="noopener">privoxy</a>,注意对应平台。根据环境，我使用的是<code>Privoxy 3.0.26 64 bit.pkg</code>这个包。</p>
+<p>下载安装完毕后，修改一些需要自定义的配置，打开<code>/usr/local/etc/privoxy</code>目录下的<code>config</code>文件，搜索<code>forward-socks5t</code>,并将端口号改为自己SSR里配置的端口（下面的1086是笔者使用的端口）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#  Examples:</span><br><span class="line">#</span><br><span class="line">#      From the company example.com, direct connections are made to</span><br><span class="line">#      all &quot;internal&quot; domains, but everything outbound goes through</span><br><span class="line">#      their ISP&#39;s proxy by way of example.com&#39;s corporate SOCKS 4A</span><br><span class="line">#      gateway to the Internet.</span><br><span class="line">#</span><br><span class="line">#        forward-socks4a   &#x2F;              socks-gw.example.com:1080  www-cache.isp.example.net:8080</span><br><span class="line">#        forward           .example.com   .</span><br><span class="line">#</span><br><span class="line">#      A rule that uses a SOCKS 4 gateway for all destinations but no</span><br><span class="line">#      HTTP parent looks like this:</span><br><span class="line">#</span><br><span class="line">#        forward-socks4   &#x2F;               socks-gw.example.com:1080  .</span><br><span class="line">#</span><br><span class="line">#      To chain Privoxy and Tor, both running on the same system, you</span><br><span class="line">#      would use something like:</span><br><span class="line">#</span><br><span class="line">        forward-socks5t   &#x2F;               127.0.0.1:1086 .</span><br><span class="line">#</span><br><span class="line">#      Note that if you got Tor through one of the bundles, you may</span><br><span class="line">#      have to change the port from 9050 to 9150 (or even another</span><br><span class="line">#      one). For details, please check the documentation on the Tor</span><br><span class="line">#      website.</span><br></pre></td></tr></table></figure>
+
+<p>继续搜索<code>listen-address</code>，将<code>127.0.0.1</code>修改为<code>0.0.0.0</code>,端口任意修改为未占用的（笔者使用的是2134）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#  Example:</span><br><span class="line">#</span><br><span class="line">#      Suppose you are running Privoxy on a machine which has the</span><br><span class="line">#      address 192.168.0.1 on your local private network</span><br><span class="line">#      (192.168.0.0) and has another outside connection with a</span><br><span class="line">#      different address. You want it to serve requests from inside</span><br><span class="line">#      only:</span><br><span class="line">#</span><br><span class="line">#        listen-address  192.168.0.1:8118</span><br><span class="line">#</span><br><span class="line">#      Suppose you are running Privoxy on an IPv6-capable machine and</span><br><span class="line">#      you want it to listen on the IPv6 address of the loopback</span><br><span class="line">#      device:</span><br><span class="line">#</span><br><span class="line">#        listen-address [::1]:8118</span><br><span class="line">#</span><br><span class="line">listen-address  0.0.0.0:2134</span><br><span class="line">#</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/31/MacOS%E5%88%86%E4%BA%AB%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86%E7%BB%99%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B6%E4%BB%96%E8%AE%BE%E5%A4%87/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/21/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1071,89 +1155,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/02/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="kinken">
-      <meta itemprop="description" content="笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kinken">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/01/02/hello-world/" class="post-title-link" itemprop="url">Hello World	<!-- 文章标题 --></a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-01-02 13:46:14" itemprop="dateCreated datePublished" datetime="2020-01-02T13:46:14+08:00">2020-01-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%99%E7%A8%8B-%E5%88%86%E7%B1%BB/" itemprop="url" rel="index">
-                    <span itemprop="name">教程 		<!-- 分类 --></span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/01/02/hello-world/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1226,7 +1227,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
