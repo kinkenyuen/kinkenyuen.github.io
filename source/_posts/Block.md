@@ -786,13 +786,276 @@ block底层对静态全局变量、全局变量并没有将其添加到自身结
 
 ####  <span id="jump">__block修饰符</span>
 
+__block类似于static、auto修饰符，可以用于给变量设置其存储的区域。例如，auto表示将变量存储在栈中，static表示将变量存储在数据区。
+
+同样地，将用__block修饰的变量实例代码转换，得到如下:
+
+```c
+int main(int argc, const char * argv[]) {
+    __block int __block_val = 100;
+    void (^aBlock)(void) = ^ {
+        __block_val = 1;
+        printf("__block_val : %d\n",__block_val);
+    };
+    aBlock();
+    printf("__block_val : %d\n",__block_val);
+    return 0;
+}
+```
+
+```c
+struct __Block_byref___block_val_0 {
+  void *__isa;
+__Block_byref___block_val_0 *__forwarding;	//指向自身的指针
+ int __flags;
+ int __size;
+ int __block_val;
+};
+
+struct __main_block_impl_0 {
+  struct __block_impl impl;
+  struct __main_block_desc_0* Desc;
+  __Block_byref___block_val_0 *__block_val; // by ref
+  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, __Block_byref___block_val_0 *___block_val, int flags=0) : __block_val(___block_val->__forwarding) {
+    impl.isa = &_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+  __Block_byref___block_val_0 *__block_val = __cself->__block_val; // bound by ref
+
+        (__block_val->__forwarding->__block_val) = 1;
+        printf("__block_val : %d\n",(__block_val->__forwarding->__block_val));
+    }
+static void __main_block_copy_0(struct __main_block_impl_0*dst, struct __main_block_impl_0*src) {_Block_object_assign((void*)&dst->__block_val, (void*)src->__block_val, 8/*BLOCK_FIELD_IS_BYREF*/);}
+
+static void __main_block_dispose_0(struct __main_block_impl_0*src) {_Block_object_dispose((void*)src->__block_val, 8/*BLOCK_FIELD_IS_BYREF*/);}
+
+static struct __main_block_desc_0 {
+  size_t reserved;
+  size_t Block_size;
+  void (*copy)(struct __main_block_impl_0*, struct __main_block_impl_0*);
+  void (*dispose)(struct __main_block_impl_0*);
+} __main_block_desc_0_DATA = { 0, sizeof(struct __main_block_impl_0), __main_block_copy_0, __main_block_dispose_0};
+int main(int argc, const char * argv[]) {
+	//初始化__block变量对应的结构体
+    __attribute__((__blocks__(byref))) __Block_byref___block_val_0 __block_val = {(void*)0,(__Block_byref___block_val_0 *)&__block_val, 0, sizeof(__Block_byref___block_val_0), 100};
+    //初始化block结构体,同时将__block变量对应的结构体指针传入保存
+    void (*aBlock)(void) = ((void (*)())&__main_block_impl_0((void *)__main_block_func_0, &__main_block_desc_0_DATA, (__Block_byref___block_val_0 *)&__block_val, 570425344));
+    ((void (*)(__block_impl *))((__block_impl *)aBlock)->FuncPtr)((__block_impl *)aBlock);
+    printf("__block_val : %d\n",(__block_val.__forwarding->__block_val));
+    return 0;
+}
+```
+可以看出
+
+```c
+__block int __block_val = 100;
+```
+转换后，变成了初始化一个`__Block_byref___block_val_0 `结构体变量`__block_val`，并将值100传入。在block结构体初始化时将`__block_val`指针传入保存，查看此处block结构体定义，新增了一个`__Block_byref___block_val_0`类型的结构体指针,再查看`__main_block_func_0`函数，使用了该指针来访问`__block_val`这个用__block修饰的变量。
+
+**此处`__forwarding`指针十分巧妙，它的作用是使__block变量无论是在栈上或是在堆上都能够被block正确访问，原理在后续章节**
+
+**在block结构体定义中，它并没有像捕获局部变量那样，将`__Block_byref___block_val_0`以结构体的形式定义，而是通过指针方式,这样做是为了让多个block可以访问同一__block变量而无需逐一实例化多个__block变量的结构体**
 
 
+### 存储域
+
+上述示例的block与__block变量都在main函数内声明定义，它们的本质是:
+
+名称|实质|
+---|---|
+block|栈上的block结构体实例
+__block变量|栈上__block变量结构体实例|
+
+#### block的存储域
+从block结构体中的isa指针值可以发现`_NSConcreteStackBlock`，此类block在栈上实例化。按照block的存储域划分，有以下三种:
+
+* _NSConcreteStackBlock
+* _NSConcreteGlobalBlock
+* _NSConcreteMallocBlock
+
+程序运行时它们的内存存储情况如下
+
+<div align=center> 	<img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/block存储域.png" width=50% /> 	<br> 	<div style="color:orange; border-bottom: 1px solid #d9d9d9;     	display: inline-block;     	color: #999;     	padding: 2px;">block存储域</div> </div>
+
+##### _NSConcreteGlobalBlock
+因为使用全局变量的地方不能使用局部变量，因此此类block不存在对局部变量的捕获，在程序中只需要一个实例，将全局block存放在数据区域显然是没有问题。
+以下两种情况存在的block均为全局block
+
+* block定义在全局区（类似于全局变量）
+* block定义的语法块中没有使用或捕获局部变量
+
+##### _NSConcreteMallocBlock
+
+栈block在超出变量作用域后，block结构体实例就被释放(__block变量同理)。而`_NSConcreteMallocBlock`即将block结构体实例和__block变量结构体实例从栈上复制到堆上，来使它们在超出作用域后，仍可以继续存在。
+
+在ARC环境下，大多数情况下编译器会自动帮我们生成复制block到堆上的代码。至于底层是如何copy，这里不展开分析。
+
+#### \_\_block变量的存储域
+
+在block捕获\_\_block变量的情况下，__block变量会受block从栈复制到堆上影响，如下
+
+__block的存储域 | block从栈复制到堆上后的影响|
+---|---
+栈 | 从栈复制到堆并被block持有|
+堆| 被block持有|
+
+<div align=center> 	<img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/block拷贝时__block变量行为.jpg" width=50% /> 	<br> 	<div style="color:orange; border-bottom: 1px solid #d9d9d9;     	display: inline-block;     	color: #999;     	padding: 2px;">block拷贝时__block变量行为</div> </div>
+
+大多数情况下，block最先都在栈上实例化，\_\_block变量也是在栈上实例化，当一个__block变量被多个block使用时，第一个被复制到堆上的block持有\_\_block实例，之后剩下的block复制到堆上时，对\_\_block实例增加引用计数。
+
+block与__block变量在堆上的内存管理与OC对象的引用计数方式相同。
+
+### \_\_forwarding的作用 
+在3.2.3.3 \_\_block修饰符一节中出现的\_\_forwarding指针，结合上面\_\_block变量实例的内存行为分析就很好理解了。转换得到以下代码:
+
+```c
+int main(int argc, const char * argv[]) {
+    __block int __block_val = 1;
+    void (^aBlock)(void) = ^ {
+        __block_val++;
+    };
+    //执行到此处，由于ARC环境，block从栈复制到堆上,__block变量也复制到堆上
+    //__block变量在复制到堆上后，更新__forwarding值，使其指向堆上的__block变量实例
+    __block_val++;//可以从下面的转换代码中看出，这里的自增实质是对堆上的__block变量结构体成员__block_val自增
+    aBlock();
+    printf("__block_val : %d\n",__block_val);//这里看似访问的是栈上的__block变量，实质也是访问堆上的
+    return 0;
+}
+```
+
+```c
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+    __Block_byref___block_val_0 *__block_val = __cself->__block_val; // bound by ref
+    (__block_val->__forwarding->__block_val)++;
+}
+
+int main(int argc, const char * argv[]) {
+    __attribute__((__blocks__(byref))) __Block_byref___block_val_0 __block_val = {(void*)0,(__Block_byref___block_val_0 *)&__block_val, 0, sizeof(__Block_byref___block_val_0), 1};
+    void (*aBlock)(void) = ((void (*)())&__main_block_impl_0((void *)__main_block_func_0, &__main_block_desc_0_DATA, (__Block_byref___block_val_0 *)&__block_val, 570425344));
+    (__block_val.__forwarding->__block_val)++;
+    ((void (*)(__block_impl *))((__block_impl *)aBlock)->FuncPtr)((__block_impl *)aBlock);
+    printf("__block_val : %d\n",(__block_val.__forwarding->__block_val));
+    return 0;
+}
+```
+
+通过`__forwarding`的处理，就可以确保block语法块内或外，访问的的__block变量均为同一个，大多数情况下是在堆中的实例。
+
+### 捕获对象
+
+```objc
+{
+	id array = [[NSMutableArray alloc] init];
+}
+```
+默认情况下,array变量在超出作用域后就被释放，在堆上的NSMutableArray对象由于没有强引用也会被释放。
+但是查看以下代码:
+
+```objc
+int main(int argc, const char * argv[]) {
+    void (^blk)(id);
+    {
+        id array = [[NSMutableArray alloc] init];
+        blk = ^ (id obj) {
+            [array addObject:obj];
+            NSLog(@"array count : %ld",[array count]);
+        };
+    }
+
+    blk([[NSObject alloc] init]);
+    blk([[NSObject alloc] init]);
+    blk([[NSObject alloc] init]);
+    
+    return 0;
+}
+```
+代码运行正常，也就是array在超出其变量作用域后，仍能在block语法块内存在被block访问赋值,这意味着block引用了该array对象
+
+转换代码
+
+```c
+struct __main_block_impl_0 {
+  struct __block_impl impl;
+  struct __main_block_desc_0* Desc;
+  id array;
+  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, id _array, int flags=0) : array(_array) {
+    impl.isa = &_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+
+static void __main_block_func_0(struct __main_block_impl_0 *__cself, id obj) {
+  id array = __cself->array; // bound by copy
+
+            ((void (*)(id, SEL, ObjectType _Nonnull))(void *)objc_msgSend)((id)array, sel_registerName("addObject:"), (id)obj);
+            NSLog((NSString *)&__NSConstantStringImpl__var_folders_fv_st7q8xkx05g6szwd247tjc8c0000gn_T_main_d9cea7_mi_0,((NSUInteger (*)(id, SEL))(void *)objc_msgSend)((id)array, sel_registerName("count")));
+}
+
+static void __main_block_copy_0(struct __main_block_impl_0*dst, struct __main_block_impl_0*src) {_Block_object_assign((void*)&dst->array, (void*)src->array, 3/*BLOCK_FIELD_IS_OBJECT*/);}
+
+static void __main_block_dispose_0(struct __main_block_impl_0*src) {_Block_object_dispose((void*)src->array, 3/*BLOCK_FIELD_IS_OBJECT*/);}
+
+static struct __main_block_desc_0 {
+  size_t reserved;
+  size_t Block_size;
+  void (*copy)(struct __main_block_impl_0*, struct __main_block_impl_0*);
+  void (*dispose)(struct __main_block_impl_0*);
+} __main_block_desc_0_DATA = { 0, sizeof(struct __main_block_impl_0), __main_block_copy_0, __main_block_dispose_0};
+
+int main(int argc, const char * argv[]) {
+    void (*blk)(id);
+    {
+        id array = ((NSMutableArray *(*)(id, SEL))(void *)objc_msgSend)((id)((NSMutableArray *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSMutableArray"), sel_registerName("alloc")), sel_registerName("init"));
+        blk = ((void (*)(id))&__main_block_impl_0((void *)__main_block_func_0, &__main_block_desc_0_DATA, array, 570425344));
+    }
+
+    ((void (*)(__block_impl *, id))((__block_impl *)blk)->FuncPtr)((__block_impl *)blk, ((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSObject"), sel_registerName("alloc")), sel_registerName("init")));
+    ((void (*)(__block_impl *, id))((__block_impl *)blk)->FuncPtr)((__block_impl *)blk, ((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSObject"), sel_registerName("alloc")), sel_registerName("init")));
+    ((void (*)(__block_impl *, id))((__block_impl *)blk)->FuncPtr)((__block_impl *)blk, ((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSObject"), sel_registerName("alloc")), sel_registerName("init")));
+
+    return 0;
+}
+```
+从以上发现，block捕获的array成为了blcok结构体中的成员变量,实际上结构体中的array变量含有__strong修饰符，编译器在ARC环境下隐藏了。在OC中，C结构体不能含有__stroing修饰的变量，因为编译器不知道何时对C结构体进行初始化和释放，也就是说C结构体不归ARC管理。
+
+但是OC的运行时库可以在恰当时机将block从栈复制到堆上以及释放堆上的block(block在ARC环境下编译器做的处理)，由于这一原因，block的结构体中可以有__strong或__weak修饰的变量，编译器也能很好地对这些变量进行内存管理。
+
+为了管理block结构体中的这些变量，使用了`__main_block_desc_0 `结构体中新增的两个成员变量，分别为`copy`与`dispose`函数指针
+
+`copy`指针指向`__main_block_copy_0`函数，而`__main_block_copy_0`函数使用`_Block_object_assign`函数**将array赋值到block结构体成员变量array中并持有该对象**
+`_Block_object_assign`相当于`retain`并赋值。这一步的表现即为block引用持有了对象array
+
+`dispose`指针指向`__main_block_dispose_0 `函数，而`__main_block_dispose_0 `函数使用`_Block_object_dispose `函数**释放赋值在block结构体成员变量array中的对象**
+`_Block_object_dispose `相当于`release`实例方法
+
+从转换代码中没有发现以上两个函数的调用处，原因是它们是**在block从栈复制到堆以及堆上block释放时才会调用**。
+
+block从栈上复制到堆的时机
+
+* 调用block的copy实例方法
+* block作为函数返回值返回
+* 将block复制给带__strong修饰符id类型的类或block类型成员变量时
+* 在方法名中含有usingBlock的Cocoa框架方法或GCD的API中传递block时
+
+在以上情况下的block都会在底层调用`_Block_copy`函数从栈上复制到堆
+
+回顾`__block修饰符`一节，其实转换代码也使用了`copy`和`dispose`函数,不同的是其中一个枚举参数
 
 
+对象| BLOCK_FIELD_IS_OBJECT|
+---|---|
+__block变量| BLOCK_FIELD_IS_BYREF|
 
+更多的枚举类型可以在前面的`Block_private.h`中内容找到
 
-
+# 参考
+《Objective-C高级编程》
 
 
 

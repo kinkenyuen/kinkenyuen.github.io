@@ -1,8 +1,8 @@
 ---
 title: 简单配置iTerm2与Zsh
 date: 2020-01-04 13:03:10
-tags: Macos
-categories: Macos
+tags: MacOS
+categories: MacOS
 ---
 
 # iTerm2
