@@ -3,7 +3,7 @@
   <entry>
     <title>MacOS分享全局代理给局域网其他设备</title>
     <url>/2020/01/31/MacOS%E5%88%86%E4%BA%AB%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86%E7%BB%99%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B6%E4%BB%96%E8%AE%BE%E5%A4%87/</url>
-    <content><![CDATA[<h1 id="为什么要这么做"><a href="#为什么要这么做" class="headerlink" title="为什么要这么做"></a>为什么要这么做</h1><p>在出租屋里的路由器配置了SSR，所有设备科学上网已经很方便了，回到老家后。出现了一些需要科学上网的场景却又很难实现，比如玩switch游戏时需要科学上网，懵逼了。于是想到了自己的MBP有SSR，能开启全局代理然后分享出来吗？</p>
+    <content><![CDATA[<h1 id="为什么要这么做"><a href="#为什么要这么做" class="headerlink" title="为什么要这么做"></a>为什么要这么做</h1><p>在出租屋里的路由器配置了SSR，所有设备科学上网已经很方便了。回到老家后，出现了一些需要科学上网的场景却又很难实现，比如玩switch游戏时需要科学上网，懵逼了。于是想到了自己的MBP有SSR，能开启全局代理然后分享出来吗？</p>
 <h1 id="正题"><a href="#正题" class="headerlink" title="正题"></a>正题</h1><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>这个方法实现了的效果是，同一局域网内的设备使用MBP上的全局代理，这里不说SSR怎么配置。</p>
 <p>下载安装<a href="http://www.privoxy.org/sf-download-mirror/" target="_blank" rel="noopener">privoxy</a>,注意对应平台。根据环境，我使用的是<code>Privoxy 3.0.26 64 bit.pkg</code>这个包。</p>
 <p>下载安装完毕后，修改一些需要自定义的配置，打开<code>/usr/local/etc/privoxy</code>目录下的<code>config</code>文件，搜索<code>forward-socks5t</code>,并将端口号改为自己SSR里配置的端口（下面的1086是笔者使用的端口）</p>
@@ -15,9 +15,9 @@
 <h2 id="开启服务"><a href="#开启服务" class="headerlink" title="开启服务"></a>开启服务</h2><figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入 Privoxy 开启关闭脚本的文件</span></span><br><span class="line"><span class="keyword">cd</span> <span class="string">/Applications/Privoxy</span></span><br><span class="line"><span class="comment"># 开启 Privoxy:</span></span><br><span class="line">sudo <span class="string">./startPrivoxy.sh</span></span><br><span class="line"><span class="comment"># 关闭 Privoxy:</span></span><br><span class="line">sudo <span class="string">./stopPrivoxy.sh</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="设备共享"><a href="#设备共享" class="headerlink" title="设备共享"></a>设备共享</h2><p>将需要共享全局代理的设备连入与MBP同一网络，然后修改无线局域网配置。将MBP的IP地址和<code>listen-address</code>配置的端口填入HTTP代理中</p>
-<div align=center>     <img src=https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/设置代理.jpg width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">设置代理</div> </div>
+<div align=center>     <img src=https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/设置代理.jpg width=50% />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">设置代理</div> </div>
 
-<div align=center>     <img src=https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/使用代理.jpg width=600 />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">使用代理</div> </div>
+<div align=center>     <img src=https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/使用代理.jpg width=50% />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">使用代理</div> </div>
 
 
 

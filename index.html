@@ -260,7 +260,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-01-31 21:42:22 / 修改时间：22:36:44" itemprop="dateCreated datePublished" datetime="2020-01-31T21:42:22+08:00">2020-01-31</time>
+              <time title="创建时间：2020-01-31 21:42:22 / 修改时间：22:39:35" itemprop="dateCreated datePublished" datetime="2020-01-31T21:42:22+08:00">2020-01-31</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -285,7 +285,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="为什么要这么做"><a href="#为什么要这么做" class="headerlink" title="为什么要这么做"></a>为什么要这么做</h1><p>在出租屋里的路由器配置了SSR，所有设备科学上网已经很方便了，回到老家后。出现了一些需要科学上网的场景却又很难实现，比如玩switch游戏时需要科学上网，懵逼了。于是想到了自己的MBP有SSR，能开启全局代理然后分享出来吗？</p>
+          <h1 id="为什么要这么做"><a href="#为什么要这么做" class="headerlink" title="为什么要这么做"></a>为什么要这么做</h1><p>在出租屋里的路由器配置了SSR，所有设备科学上网已经很方便了。回到老家后，出现了一些需要科学上网的场景却又很难实现，比如玩switch游戏时需要科学上网，懵逼了。于是想到了自己的MBP有SSR，能开启全局代理然后分享出来吗？</p>
 <h1 id="正题"><a href="#正题" class="headerlink" title="正题"></a>正题</h1><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>这个方法实现了的效果是，同一局域网内的设备使用MBP上的全局代理，这里不说SSR怎么配置。</p>
 <p>下载安装<a href="http://www.privoxy.org/sf-download-mirror/" target="_blank" rel="noopener">privoxy</a>,注意对应平台。根据环境，我使用的是<code>Privoxy 3.0.26 64 bit.pkg</code>这个包。</p>
 <p>下载安装完毕后，修改一些需要自定义的配置，打开<code>/usr/local/etc/privoxy</code>目录下的<code>config</code>文件，搜索<code>forward-socks5t</code>,并将端口号改为自己SSR里配置的端口（下面的1086是笔者使用的端口）</p>
