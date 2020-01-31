@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+  <meta name="description" content="内存使用应用的内存消耗主要分为两部分：栈大小和堆大小 栈大小应用中的每个线程都有专用的栈空间，栈可以在线程存在期间自由使用。线程的最大栈空间很小，因此有很多限制  限制递归调用的最大方法数 方法中使用的参数个数和内部变量个数 视图层级的最大深度 …  堆大小每个进程的所有线程共享一个堆。OC对象如NSString、UIImage、视图等都会消耗堆内存。大多数情况下，OC对象存放在堆中,与通过类创建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS内存管理">
+<meta property="og:url" content="http://yoursite.com/2020/01/16/iOS%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="kinken">
+<meta property="og:description" content="内存使用应用的内存消耗主要分为两部分：栈大小和堆大小 栈大小应用中的每个线程都有专用的栈空间，栈可以在线程存在期间自由使用。线程的最大栈空间很小，因此有很多限制  限制递归调用的最大方法数 方法中使用的参数个数和内部变量个数 视图层级的最大深度 …  堆大小每个进程的所有线程共享一个堆。OC对象如NSString、UIImage、视图等都会消耗堆内存。大多数情况下，OC对象存放在堆中,与通过类创建">
+<meta property="article:published_time" content="2020-01-16T11:27:19.000Z">
+<meta property="article:modified_time" content="2020-01-31T12:32:43.813Z">
+<meta property="article:author" content="kinken">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/01/16/iOS%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>iOS内存管理 | kinken</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cdfa49db44b40930a1ba3f06704087b5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">kinken</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/16/iOS%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          iOS内存管理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-16 19:27:19" itemprop="dateCreated datePublished" datetime="2020-01-16T19:27:19+08:00">2020-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="内存使用"><a href="#内存使用" class="headerlink" title="内存使用"></a>内存使用</h1><p>应用的内存消耗主要分为两部分：栈大小和堆大小</p>
+<h2 id="栈大小"><a href="#栈大小" class="headerlink" title="栈大小"></a>栈大小</h2><p>应用中的每个线程都有专用的栈空间，栈可以在线程存在期间自由使用。线程的最大栈空间很小，因此有很多限制</p>
+<ul>
+<li>限制递归调用的最大方法数</li>
+<li>方法中使用的参数个数和内部变量个数</li>
+<li>视图层级的最大深度</li>
+<li>…</li>
+</ul>
+<h2 id="堆大小"><a href="#堆大小" class="headerlink" title="堆大小"></a>堆大小</h2><p>每个进程的所有线程共享一个堆。OC对象如NSString、UIImage、视图等都会消耗堆内存。<strong>大多数情况下，OC对象存放在堆中</strong>,<strong>与通过类创建的对象相关的所有数据也都存放在堆中</strong>。</p>
+<h1 id="内存管理模型"><a href="#内存管理模型" class="headerlink" title="内存管理模型"></a>内存管理模型</h1><p>苹果LLVM官方文档使用术语<code>持有关系</code>和<code>引用计数</code>来描述OC对象的内存管理。</p>
+<p>如果一个对象处于被持有状态，那么它占用的内存就不能被回收。</p>
+<p>当一个对象在某个方法内部创建时，那么该方法就持有这个对象。如果对象从方法中返回，则方法调用者声称建立了持有关系。对象”赋值”给其他变量，对应的变量同样声称建立了持有关系。</p>
+<p>一个对象的持有者数量称之为引用计数，当持有者与被持有对象建立持有关系时，被持有对象的引用计数增加1，同理，解除持有关系时，引用计数减少1，当引用计数降为0时，该对象被释放，对应相关的内存会被回收。</p>
+<p>管理形式分为手动引用计数(<code>manual reference counting,MRC</code>)与自动引用计数(<code>automatic reference counting, ARC</code>)</p>
+<h2 id="MRC"><a href="#MRC" class="headerlink" title="MRC"></a>MRC</h2><p>虽然MRC现在已经十分罕见，但理解MRC对内存管理有很大帮助</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MyObject</span> : <span class="title">NSObject</span></span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MyObject</span></span></span><br><span class="line">- (<span class="keyword">void</span>)dealloc</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>,__func__);</span><br><span class="line">    [<span class="keyword">super</span> dealloc];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    MyObject *obj = [[MyObject alloc] init];<span class="comment">//1</span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"retainCount : %lu"</span>,obj.retainCount);	</span><br><span class="line">    MyObject *objRetained = [obj <span class="keyword">retain</span>];<span class="comment">//2</span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"retainCount : %lu"</span>,obj.retainCount);</span><br><span class="line">    [objRetained release];<span class="comment">//3</span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"retainCount : %lu"</span>,obj.retainCount);</span><br><span class="line">    [obj release];<span class="comment">//4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2020</span><span class="number">-01</span><span class="number">-16</span> <span class="number">11</span>:<span class="number">21</span>:<span class="number">35.447154</span>+<span class="number">0800</span> block[<span class="number">999</span>:<span class="number">19673</span>] retainCount : <span class="number">1</span></span><br><span class="line"><span class="number">2020</span><span class="number">-01</span><span class="number">-16</span> <span class="number">11</span>:<span class="number">21</span>:<span class="number">35.447242</span>+<span class="number">0800</span> block[<span class="number">999</span>:<span class="number">19673</span>] retainCount : <span class="number">2</span></span><br><span class="line"><span class="number">2020</span><span class="number">-01</span><span class="number">-16</span> <span class="number">11</span>:<span class="number">21</span>:<span class="number">35.447270</span>+<span class="number">0800</span> block[<span class="number">999</span>:<span class="number">19673</span>] retainCount : <span class="number">1</span></span><br><span class="line"><span class="number">2020</span><span class="number">-01</span><span class="number">-16</span> <span class="number">11</span>:<span class="number">21</span>:<span class="number">35.447411</span>+<span class="number">0800</span> block[<span class="number">999</span>:<span class="number">19673</span>] -[MyObject dealloc]</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>创建对象,obj建立了持有关系，引用计数为1</li>
+<li>objRetained建立了持有关系，引用计数增加为2</li>
+<li>objRetained解除了持有关系，引用计数降为1</li>
+<li>obj解除持有关系，引用计数降为0，对象调用析构方法dealloc</li>
+</ol>
+<hr>
+<p>方法中的引用计数</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MyObject</span> : <span class="title">NSObject</span></span></span><br><span class="line">- (<span class="built_in">NSString</span> *)name;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MyObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *result = [[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@"%@\n"</span>,<span class="string">@"kinken"</span>];<span class="comment">//1</span></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)dealloc</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>,__func__);</span><br><span class="line">    [<span class="keyword">super</span> dealloc];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    MyObject *obj = [[MyObject alloc] init];</span><br><span class="line">    <span class="built_in">NSString</span> *name = [obj name];<span class="comment">//2</span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"obj's name : %@"</span>,name);</span><br><span class="line">    [name release];<span class="comment">//3</span></span><br><span class="line">    [obj release];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2020</span><span class="number">-01</span><span class="number">-16</span> <span class="number">12</span><span class="string">:43:50.861654+0800</span> <span class="string">block[1026:28263]</span> <span class="string">obj's</span> <span class="attr">name :</span> <span class="string">kinken</span></span><br><span class="line"><span class="number">2020</span><span class="number">-01</span><span class="number">-16</span> <span class="number">12</span><span class="string">:43:50.861756+0800</span> <span class="string">block[1026:28263]</span> <span class="string">-[MyObject</span> <span class="string">dealloc]</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>首次创建对象，<code>name</code>指向内存的引用计数为1,<code>name</code>方法持有<code>NSString</code>对象</li>
+<li>通过<code>name</code>指向的内存引用计数仍然为1。在<code>viewDidLoad</code>方法中通过调用<code>[obj name]</code>引用了对象，获得了该对象，此时不应该再次持有(<code>retain</code>)。(<code>name</code>方法内部通过<code>alloc</code>方法创建对象已经<code>retain</code>建立持有关系)</li>
+<li>使用完毕，解除持有关系，引用计数为0</li>
+</ol>
+<p><code>viewDidLoad</code>并不知道<code>name</code>方法是创建了一个新的对象还是重用旧的对象。但是它知道对象的引用计数加1后会被返回，因此这里没有继续持有(<code>retain</code>)<code>name</code>。</p>
+<p>我的理解是当对象被作为返回值返回时，内部会建立一个新的持有关系（当前例子中<code>Myobject</code>类的<code>name</code>方法内部创建<code>NSString</code>类的对象并持有），你不需要再次<code>retain</code>来再次持有，只需要在使用完毕后手动<code>release</code>对象。</p>
+<h2 id="Autoreleasing-Objects"><a href="#Autoreleasing-Objects" class="headerlink" title="Autoreleasing Objects"></a>Autoreleasing Objects</h2><p>自动释放对象（<code>Autoreleasing Objects</code>），让你解除对一个对象的持有关系，但延后对它的销毁。当在方法中创建一个对象并且需要将其返回时，自动释放就非常有用。自动释放可以帮助MRC管理对象的生命周期。</p>
+<p>沿用上一节的例子，从表面上看，没有什么能够表示<code>name</code>方法持有了返回的字符串对象，因此在<code>viewDidLoad</code>方法内也不应该<code>release</code>返回的字符串，这有可能会导致内存泄漏（释放一块未知的内存区域）。而加入<code>[name release]</code>的原因是我们事先知道name方法内部是通过<code>alloc</code>创建了对象并持有(<code>retain</code>)。</p>
+<p>类似于这种<strong>创建对象并持有</strong>的情况有以下</p>
+<ul>
+<li>alloc</li>
+<li>new </li>
+<li>copy</li>
+<li>mutableCopy</li>
+</ul>
+<p>那么，在不知道方法内部是如何创建对象的情况下，外部的方法调用者如何正确管理返回值对象的生命周期</p>
+<p>有两种可能的解决方案</p>
+<ul>
+<li>不使用alloc或相关的方法</li>
+<li>对返回的对象使用使用autorelease延时释放</li>
+</ul>
+<p>第一种</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MyObject</span> : <span class="title">NSObject</span></span></span><br><span class="line">- (<span class="built_in">NSString</span> *)name;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MyObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *result = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%@"</span>,<span class="string">@"kinken"</span>];<span class="comment">//1</span></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)dealloc</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>,__func__);</span><br><span class="line">    [<span class="keyword">super</span> dealloc];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    MyObject *obj = [[MyObject alloc] init];</span><br><span class="line">    <span class="built_in">NSString</span> *name = [obj name];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"obj's name : %@"</span>,name);</span><br><span class="line">    <span class="comment">//2</span></span><br><span class="line">    [obj release];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>不使用alloc方法</li>
+<li>实际上stringWithFormat返回的是一个autorelease对象，返回的时候已经解除持有关系，只是还没有销毁</li>
+</ol>
+<p>第一种方案实际上是第二种方案的一个例子</p>
+<hr>
+<p>第二种</p>
+<p><code>NSObject</code>协议定义了<code>autorelease</code>方法，可在从方法中返回对象时使用它返回一个<code>autorelease</code>对象</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *result = [[[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@"%@\n"</span>,<span class="string">@"kinken"</span>] autorelease];</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过alloc创建对象并持有</li>
+<li>autorelease表示解除持有关系，但是延时释放，即允许方法的调用者在对象被释放之前使用该对象</li>
+</ul>
+<h2 id="Autorelease-Pool-Blocks"><a href="#Autorelease-Pool-Blocks" class="headerlink" title="Autorelease Pool Blocks"></a>Autorelease Pool Blocks</h2><p>自动释放池块(<code>Autorelease Pool Blocks</code>)是允许你解除对一个对象的持有关系，但可避免对象立即被销毁回收的一个工具。</p>
+<p>它能确保在块内创建的对象在块完成时被回收。这在创建了多个对象的场景中非常有用，因为在块中可以提早释放不再需要的对象，从而降低内存用量。</p>
+<p>iOS中常见的代码</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate <span class="keyword">class</span>]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用<code>@autoreleasepool{}</code>表示自动释放池块，块中收到<code>autorelease</code>消息的所有对象都会在<code>autoreleasepool</code>块结束时收到<code>release</code>消息。每调用一次<code>autorelease</code>会向对象发送一次<code>release</code>消息，这意味着如果一 个对象收到了不止一次的 <code>autorelease</code>消息，那它也会多次收到<code>release</code>消息。</p>
+<p><code>main</code>方法的代码中可以发现，整个应用的代码都在自动释放池块中，这意味着应用程序关闭退出后，所有的<code>autorelease</code>对象最后都会被回收,不会导致内存泄漏。</p>
+<hr>
+<p>嵌套<code>autoreleasepool</code>块</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@autoreleasepool</span> &#123; </span><br><span class="line">    <span class="comment">// 一些代码 </span></span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">    <span class="comment">// 更多代码 </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样操作的目的是<strong>提前执行对象的销毁回收</strong></p>
+<blockquote>
+<p>Cocoa 框架希望代码能在 autoreleasepool 块内执行，否则 autorelease 对象将无法被 释放，从而导致应用发生内存泄漏。</p>
+</blockquote>
+<blockquote>
+<p>AppKit 和 UIKit 框架将事件 - 循环的迭代放入了 autoreleasepool 块中。因此，通常 不需要你自己再创建 autoreleasepool 块了。</p>
+</blockquote>
+<hr>
+<p>说说手动创建<code>autoreleasepool</code>的情况</p>
+<ul>
+<li>当有需要创建很多临时对象的循环时，在循环中使用<code>autoreleasepool</code>提早释放内存，降低内存使用总和峰值</li>
+<li>当你手动创建一个线程时，每个线程都需要有它自己的<code>autoreleasepool</code>栈。主线程用自己的<code>autoreleasepool</code>启动，因为它来自统一生成的代码(类似于上述的main)。然而，对于任何自定义的线程，在线程执行开始的时候，必须创建线程对应的<code>autoreleasepool</code>，否则会有内存泄漏。</li>
+<li>当你编写一个不是基于UI框架的程序，如命令行工具</li>
+</ul>
+<p>情况一，循环中的<code>autoreleasepool</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//代码块1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="built_in">NSUInteger</span> *userCount = userDatabase.userCount;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSUInteger</span> *i = <span class="number">0</span>; i &lt; userCount; i++) &#123;</span><br><span class="line">            Person *p = [userDatabase userAtIndex:i];</span><br><span class="line">            <span class="built_in">NSString</span> *fname = p.fname; <span class="keyword">if</span>(fname == <span class="literal">nil</span>) &#123;</span><br><span class="line">                fname = [<span class="keyword">self</span> askUserForFirstName];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">NSString</span> *lname = p.lname; <span class="keyword">if</span>(lname == <span class="literal">nil</span>) &#123;</span><br><span class="line">                lname = [<span class="keyword">self</span> askUserForLastName];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//...</span></span><br><span class="line">            [userDatabase updateUser:p];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//代码块2</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="built_in">NSUInteger</span> *userCount = userDatabase.userCount; </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSUInteger</span> *i = <span class="number">0</span>; i &lt; userCount; i++) &#123;</span><br><span class="line">            <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">                Person *p = [userDatabase userAtIndex:i];</span><br><span class="line">                <span class="built_in">NSString</span> *fname = p.fname; <span class="keyword">if</span>(fname == <span class="literal">nil</span>) &#123;</span><br><span class="line">                    fname = [<span class="keyword">self</span> askUserForFirstName];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="built_in">NSString</span> *lname = p.lname; <span class="keyword">if</span>(lname == <span class="literal">nil</span>) &#123;</span><br><span class="line">                    lname = [<span class="keyword">self</span> askUserForLastName];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//...</span></span><br><span class="line">                [userDatabase updateUser:p];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>代码块1只有一个<code>autoreleasepool</code>,内存释放回收需要在所有的迭代完成之后才开始进行</li>
+<li>代码块2在循环中内嵌<code>autoreleasepool</code>确保每次循环迭代完成后<strong>立即释放回收对象内存</strong>，从而减少内存最大用量</li>
+</ol>
+<p>情况二，自定义线程中必须创建自己的<code>autoreleasepool</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSThread</span> *newThread = [[<span class="built_in">NSThread</span> alloc] initWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(newThreadStart:) object:<span class="literal">nil</span>];</span><br><span class="line">    [newThread start];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)newThreadStart:(<span class="keyword">id</span>)obj &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"newThreadStart"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ARC"><a href="#ARC" class="headerlink" title="ARC"></a>ARC</h2><p>使用MRC需要开发人员在适当位置频繁使用<code>retain</code>、<code>release</code>和<code>autorelease</code>,一方面需要开发人员十分熟悉MRC的内存管理规则，另一方面需要花费很多精力编写重复的代码。ARC解决方案在这样的环境下提出，目前OC与Swift均使用ARC。</p>
+<p>ARC是一种编译器特性,它分析对象在代码中的生命周期，并在编译期自动插入适合的内存管理代码(<code>retain</code>,<code>release</code>等)。同时编译期还会生成适合的<code>dealloc</code>方法对对象内存做清理工作。这大大减轻了开发人员的内存管理负担。</p>
+<hr>
+<p>为了规范ARC内存管理的模型，使用ARC需要遵循的一些规则</p>
+<ul>
+<li>不能实现或调用 retain、release、autorelease 或 retainCount 方法。这一限制不仅针 对对象，对选择器同样有效。因此，[obj release]或@selector(retain)是编译时的错误。</li>
+<li>可以实现 dealloc 方法，但不能调用它们。不仅不能调用其他对象的 dealloc 方法，也<br>不能调用超类。[super dealloc] 是编译时的错误。但你仍然可以对 Core Foundation 类型的对象调用 CFRetain、CFRelease 等相关方法。</li>
+<li>不能调用 NSAllocateObject 和 NSDeallocateObject 方法。应使用 alloc 方法创建对象， 运行时负责回收对象</li>
+<li>不能在 C 语言的结构体内使用对象指针。</li>
+<li>不能在 id 类型和 void * 类型之间自动转换。如果需要，那么你必须做显式转换。</li>
+<li>不能使用 NSAutoreleasePool，要替换使用 autoreleasepool 块。</li>
+<li>不能使用 NSZone 内存区域。</li>
+<li>属性的访问器名称不能以 new 开头，以确保与 MRC 的互操作性。</li>
+</ul>
+<h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><ul>
+<li>强引用，默认的引用类型。被强引用指向的对象内存不会被释放。强引用会对引用计数加1，从而延长对象的生命周期</li>
+<li>弱引用，不会增加引用计数类型，因而不会延长对象的生命周期。</li>
+</ul>
+<h4 id="变量限定符"><a href="#变量限定符" class="headerlink" title="变量限定符"></a>变量限定符</h4><p>ARC为变量提供4种生命周期限定符</p>
+<ul>
+<li>__strong，默认限定符，无需显式引入。只要有强引用指向，对象就会长时间驻留在内存堆中。可以将__strong理解为retain调用的ARC版本</li>
+<li>__weak，表示引用不会保持被引用对象的存货。当没有强引用指向对象，弱引用会被置为nil。可将__weak 看作是 assign 操作符的 ARC 版本，只是对象被回收时，__weak具有安全性——指针将自动被设置为 nil。</li>
+<li>__unsafe_unretained, 与 __weak 类似，只是当没有强引用指向对象时，__unsafe_unretained 不会被置为 nil。 可将其看作 assign 操作符的 ARC 版本。</li>
+<li>__autoreleasing，用于由引用使用id *传递的消息参数。它预期了autorelease方法会在传递参数的方法中被调用</li>
+</ul>
+<p>第四点解释</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)moveItemAtPath:(<span class="built_in">NSString</span> *)srcPath toPath:(<span class="built_in">NSString</span> *)dstPath error:(<span class="built_in">NSError</span> **)error API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line"></span><br><span class="line">编译时实际是</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">BOOL</span>)moveItemAtPath:(<span class="built_in">NSString</span> *)srcPath toPath:(<span class="built_in">NSString</span> *)dstPath error:(<span class="built_in">NSError</span> * __autoreleasing*)error API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br></pre></td></tr></table></figure>
+
+<p>变量限定符的使用情况</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MyObject * __<span class="keyword">strong</span> obj1 = [[MyObject alloc] init];<span class="comment">//1</span></span><br><span class="line">MyObject * __<span class="keyword">weak</span> obj2 = [[MyObject alloc] init];<span class="comment">//2</span></span><br><span class="line">MyObject * __<span class="keyword">unsafe_unretained</span> obj3 = [[MyObject alloc] init];<span class="comment">//3</span></span><br><span class="line">MyObject * __autoreleasing obj = [[MyObject alloc] init];<span class="comment">//4</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>创建对象后引用计数为 1，并且对象在 obj1引用期间不会被回收。</li>
+<li>创建对象后引用计数为 0，对象会被立即释放，且 obj2 将被设置为 nil。</li>
+<li>创建对象后引用计数为 1，对象会被立即释放，但 obj3不会被设置为 nil。</li>
+<li>创建对象后引用计数为 1，当方法返回时对象会被自动释放。</li>
+</ol>
+<h4 id="属性限定符"><a href="#属性限定符" class="headerlink" title="属性限定符"></a>属性限定符</h4><p>属性声明根据引用类型新增两个持有关系限定符:<code>strong</code>和<code>weak</code>。另外<code>assign</code>的语义也更新了。总的来说共有6个限定符。</p>
+<ul>
+<li>strong，默认，指定了__strong强引用关系</li>
+<li>weak，指定__weak弱引用关系</li>
+<li>assign，MRC环境是默认的持有关系限定符，ARC环境是__unsafe_unretained关系</li>
+<li>copy，指定__strong的强引用关系同时，还表示使用setter中的copy语义(对象的copy)</li>
+<li>retain，指定__strong强引用关系</li>
+<li>unsafe_unretained,指定了__unsafe_unretained关系</li>
+</ul>
+<p><code>assign</code>和<code>unsafe_unretained</code>只进行值复制而没有任何实质性的检查，所以它们仅用于值类型(BOOL、NSInteger等等)。避免将它们用于引用类型或指针类型</p>
+<p>属性限定符的使用情况</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UIView</span> *myView;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span>&lt;<span class="built_in">UIApplicationDelegate</span>&gt; delegate;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="built_in">UIView</span> *myWrongView;<span class="comment">//1</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="built_in">BOOL</span> *myFlag;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *myName;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">retain</span>) <span class="built_in">UIView</span> *mySecondView;<span class="comment">//2</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">unsafe_unretained</span>) <span class="built_in">UIView</span> *myThirdView;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>错误将assign用于指针</li>
+<li>老古董用法，现在基本不会出现</li>
+</ol>
+<h2 id="内存管理规则"><a href="#内存管理规则" class="headerlink" title="内存管理规则"></a>内存管理规则</h2><p>苹果<a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmRules.html#//apple_ref/doc/uid/20000994-BAJHFBGH" target="_blank" rel="noopener">官方文档</a>中描述，内存管理的四个基本规则</p>
+<ul>
+<li>你拥有所有自己创建的对象，如通过new、alloc、copy或mutableCopy创建</li>
+<li>用MRC中的retain或ARC中的__strong引用来拥有任何对象的持有关系</li>
+<li>当不需要某个对象时，使用MRC中的release来放弃对该对象的持有关系，而在ARC中无需任何特殊操作，持有关系会在对象失去最后的引用（通常为方法中的最后一行代码）时销毁回收。</li>
+</ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>《High Performance iOS Apps》</li>
+<li>《Objective-C高级编程》</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/iOS/" rel="tag"><i class="fa fa-tag"></i> iOS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/14/%E9%80%86%E5%90%91%E8%8E%B7%E5%8F%96Block%E5%AF%B9%E5%BA%94%E5%87%BD%E6%95%B0%E5%85%A5%E5%8F%A3%E5%92%8C%E5%87%BD%E6%95%B0%E7%AD%BE%E5%90%8D/" rel="prev" title="逆向获取Block对应函数入口和函数签名">
+      <i class="fa fa-chevron-left"></i> 逆向获取Block对应函数入口和函数签名
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/01/16/%E4%BD%BF%E7%94%A8futurerestore%E6%81%A2%E5%A4%8D%E5%88%B0%E4%BD%8E%E7%89%88%E6%9C%ACiOS%E7%B3%BB%E7%BB%9F/" rel="next" title="使用futurerestore恢复到低版本iOS系统">
+      使用futurerestore恢复到低版本iOS系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#内存使用"><span class="nav-number">1.</span> <span class="nav-text">内存使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#栈大小"><span class="nav-number">1.1.</span> <span class="nav-text">栈大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#堆大小"><span class="nav-number">1.2.</span> <span class="nav-text">堆大小</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存管理模型"><span class="nav-number">2.</span> <span class="nav-text">内存管理模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MRC"><span class="nav-number">2.1.</span> <span class="nav-text">MRC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Autoreleasing-Objects"><span class="nav-number">2.2.</span> <span class="nav-text">Autoreleasing Objects</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Autorelease-Pool-Blocks"><span class="nav-number">2.3.</span> <span class="nav-text">Autorelease Pool Blocks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARC"><span class="nav-number">2.4.</span> <span class="nav-text">ARC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引用类型"><span class="nav-number">2.4.1.</span> <span class="nav-text">引用类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#变量限定符"><span class="nav-number">2.4.1.1.</span> <span class="nav-text">变量限定符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#属性限定符"><span class="nav-number">2.4.1.2.</span> <span class="nav-text">属性限定符</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存管理规则"><span class="nav-number">2.5.</span> <span class="nav-text">内存管理规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="kinken"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">kinken</p>
+  <div class="site-description" itemprop="description">笔记</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/kinkenyuen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;kinkenyuen" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yuenkinken@icloud.com" title="E-Mail → mailto:yuenkinken@icloud.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kinken</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.6.0
+  </div>
+-->
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'c97f0130ab0a264b7168',
+      clientSecret: '4e2ecaa5e4e2cb189574e8fd388bf15d5a40f0cf',
+      repo: 'kinkenyuen.github.io',
+      owner: 'kinkenyuen',
+      admin: ['kinkenyuen'],
+      id: 'fbd1d5487a8b6a47bb107ffea8390560',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

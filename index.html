@@ -32,7 +32,7 @@
     version: '7.6.0',
     exturl: false,
     sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
+    copycode: {"enable":true,"show_result":true,"style":null},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
     bookmark: {"enable":false,"color":"#222","save":"auto"},
     fancybox: true,
@@ -235,6 +235,668 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/21/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/21/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="post-title-link" itemprop="url">进程与线程</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-21 14:18:04" itemprop="dateCreated datePublished" datetime="2020-01-21T14:18:04+08:00">2020-01-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h1><p>进程和线程在操作系统中是比较重要的内容，面试中的基础提问也经常会出现，如进程和线程的区别等等，如果没有仔细梳理，还真的很难说清楚。本文仅列出进程和线程的基本内容及区别。</p>
+<p>在一些操作系统的书籍中，通常会介绍到<strong>多任务系统</strong>，现代的操作系统基本都是支持 “多任务”，简单地说，多任务指的是操作系统可以同时运行多个任务。比如我现在一边在<code>MacDown</code>写东西，一边听音乐，一边在用浏览器看文章。</p>
+<p>现在，多核CPU非常普及，在这之前使用的单核CPU，也是可以执行多任务，由于CPU执行代码都是顺序执行，那么单核CPU如何执行多任务？答案是操作系统按一定时间分配CPU给任务1、任务2…，任务之间交替使用CPU执行，由于CPU的执行速度快且任务之间的切换时间间隔很短，因此就有多个任务同时执行一样。</p>
+<p>在多核CPU上能够实现真正的并行执行多任务，操作系统自动把多个任务轮流调度到CPU的每个核心上执行。</p>
+<p>对操作系统而言，一个任务就是一个进程（Process）。进程有可能不止同时做一件事，比如音乐播放器可以一边播放音乐，一边搜索歌曲。在进程内部同时执行的多个“子任务”，它们是在多个线程（Thread）上执行。</p>
+<p>所以，进程至少有一个线程。同样地，在单核CPU中，多个线程之间可以快速切换实现多线程并发；在多核CPU中，多个线程在不同核心上执行，实现了多线程并行。</p>
+<table>
+<thead>
+<tr>
+<th>CPU</th>
+<th>进程</th>
+<th>线程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单核</td>
+<td>多进程并发，多个进程时间片轮换</td>
+<td>多线程并发，同一进程内的线程轮换</td>
+</tr>
+<tr>
+<td>多核</td>
+<td>并行，不同进程的线程使用不同核心</td>
+<td>并行，多个线程使用不同的核心</td>
+</tr>
+</tbody></table>
+<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>程序本身只是指令、数据及其组织形式的描述，进程才是程序的真正运行实例。在分时系统中，进程是基本的运作单位，但是在当代多数面向线程设计的系统中，进程本身不是基本运行单位，而是线程的容器。进程内包含一个或多个线程（每一个线程都代表一个进程内的一个独立执行上下文）</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/21/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/21/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/21/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/" class="post-title-link" itemprop="url">内存分配</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-21 14:16:24" itemprop="dateCreated datePublished" datetime="2020-01-21T14:16:24+08:00">2020-01-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h1><p>在早期的计算机中，程序是直接运行在物理内存上，也就是说，程序运行时所访问的地址都是物理地址，如果计算机只运行一个程序且该程序所需的内存空间不超过物理内存大小，就不会有问题。现在计算机需要同时运行多个程序，那么如何将有限的物理内存分配给多个程序使用？</p>
+<h1 id="直接分配的弊端"><a href="#直接分配的弊端" class="headerlink" title="直接分配的弊端"></a>直接分配的弊端</h1><p>假设一台计算机有64MB内存，程序A运行需要50MB，程序运行需要10MB，需要同时运行这两个程序，比较直接的做法就是将0MB~50MB分配给A，50MB~60MB分配给B。</p>
+<p>这样的分配策略会带来很多问题:</p>
+<ul>
+<li><strong>地址空间不隔离</strong> 所有程序都直接访问物理地址，程序之间使用的地址空间共享物理内存，很容易发生恶意程序改写其他程序内存数据的情况；另外本身有bug的程序也有可能影响到其他程序的执行。这造成了程序运行不稳定的情况。</li>
+<li><strong>程序运行时地址不确定</strong>  在程序装入运行时，需要分配一块足够大的空闲区域，而这个位置不确定，那么在程序编写时，指令的跳转需要你自己计算得出绝对地址，这是十分麻烦的。</li>
+<li><strong>内存使用效率低</strong> 执行一个程序就将整个程序加载到内存，若需要继续同时执行另外的程序，则会出现内存不足，这时只能将内存中现有的数据换出到磁盘，磁盘、内存之间的大容量的换出换入必会导致效率低下</li>
+</ul>
+<h1 id="如何解决直接分配的弊端"><a href="#如何解决直接分配的弊端" class="headerlink" title="如何解决直接分配的弊端"></a>如何解决直接分配的弊端</h1><h2 id="解决地址空间不隔离和程序运行时地址不确定"><a href="#解决地址空间不隔离和程序运行时地址不确定" class="headerlink" title="解决地址空间不隔离和程序运行时地址不确定"></a>解决地址空间不隔离和程序运行时地址不确定</h2><p>从程序执行的角度看，我们不希望它介入到复杂得内存分配过程中，我们希望一个程序在执行的时候只需要一个简单得执行环境（独立单一的地址空间、单一的CPU，不用关心其他程序）。</p>
+<p>可以把地址空间想象成一个很大的数组，数组大小取决于地址空间的地址长度，如64位的地址空间为<code>2^64 = 18446744073709551616</code>，一般用十六进制表示<code>0x0000000000000000~0xFFFFFFFFFFFFFFFF</code></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/21/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/17/%E6%8E%A2%E7%B4%A2autoreleasepool/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/17/%E6%8E%A2%E7%B4%A2autoreleasepool/" class="post-title-link" itemprop="url">探索autoreleasepool</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-17 19:21:53" itemprop="dateCreated datePublished" datetime="2020-01-17T19:21:53+08:00">2020-01-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文纯属是根据前人对<code>autoreleasepool</code>的分析学习和苹果文档、源码的一次学习笔记，内容大部分来自引用。本人所做的工作仅是按照前人的笔记手动实践一遍梳理原理并记录供日后方便回顾。</p>
+<p>通常来说，研究<code>Objective-C</code>必备的源码</p>
+<p><a href="https://opensource.apple.com/source/objc4/" target="_blank" rel="noopener">objc4</a></p>
+<h1 id="引出autoreleasepool"><a href="#引出autoreleasepool" class="headerlink" title="引出autoreleasepool"></a>引出autoreleasepool</h1><p>iOS应用程序在默认创建时，<code>main</code>函数的内容都有一个<code>autorelease</code>块包裹函数体</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate <span class="keyword">class</span>]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从iOS内存管理的内容可以得知，这个自动释放池块对应着主线程，伴随着整个应用程序生命周期，当我们手动退出应用程序，整个自动释放池内的对象都将被释放，因此不会出现内存泄漏。</p>
+<p>另外，从<code>objc4</code>源码对<code>autorelease pool</code>实现中的注释中可以获得一些相关信息</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="markdown">/<span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span>*</span></span></span><br><span class="line"><span class="comment"><span class="markdown">   Autorelease pool implementation</span></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"><span class="markdown">   A thread's autorelease pool is </span>a<span class="markdown"> stack of pointers. </span></span></span><br><span class="line"><span class="comment"><span class="markdown">   Each pointer is either </span>an<span class="markdown"> object to release, or POOL_BOUNDARY which is </span></span></span><br><span class="line"><span class="comment"><span class="markdown"><span class="code">     </span></span>an<span class="markdown"> autorelease pool boundary.</span></span></span><br><span class="line"><span class="comment"><span class="markdown">   A pool token is </span>a<span class="markdown"> pointer to </span>the<span class="markdown"> POOL_BOUNDARY for that pool. When </span></span></span><br><span class="line"><span class="comment"><span class="markdown"><span class="code">     </span></span>the<span class="markdown"> pool is popped, every object hotter than </span>the<span class="markdown"> sentinel is released.</span></span></span><br><span class="line"><span class="comment"><span class="markdown">   The stack is divided into </span>a<span class="markdown"> doubly-linked list of pages. Pages </span>are<span class="markdown"> added </span></span></span><br><span class="line"><span class="comment"><span class="markdown"><span class="code">     and deleted as necessary. </span></span></span></span><br><span class="line"><span class="comment"><span class="markdown">   Thread-local storage points to </span>the<span class="markdown"> hot page, where newly autoreleased </span></span></span><br><span class="line"><span class="comment"><span class="markdown"><span class="code">     objects </span></span>are<span class="markdown"> stored. </span></span></span><br><span class="line"><span class="comment"><span class="markdown"><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span><span class="strong">*****</span>/</span></span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/17/%E6%8E%A2%E7%B4%A2autoreleasepool/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/16/%E4%BD%BF%E7%94%A8futurerestore%E6%81%A2%E5%A4%8D%E5%88%B0%E4%BD%8E%E7%89%88%E6%9C%ACiOS%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/16/%E4%BD%BF%E7%94%A8futurerestore%E6%81%A2%E5%A4%8D%E5%88%B0%E4%BD%8E%E7%89%88%E6%9C%ACiOS%E7%B3%BB%E7%BB%9F/" class="post-title-link" itemprop="url">使用futurerestore恢复到低版本iOS系统</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-16 19:45:12" itemprop="dateCreated datePublished" datetime="2020-01-16T19:45:12+08:00">2020-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一般而言，iOS设备上的固件恢复需要配合Apple服务器进行校验，Apple停止公开验证某个固件版本时，iOS设备就不能从高版本恢复到停止验证的版本。</p>
+<h1 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h1><ol>
+<li>具备解锁nvram，写入generator的可能</li>
+<li>根据设备的唯一码备份了对应的<code>SHSH2</code>文件</li>
+<li>当前最新固件SEP兼容需要降级的目标版本固件</li>
+</ol>
+<h2 id="generator-amp-nonce"><a href="#generator-amp-nonce" class="headerlink" title="generator&amp;nonce"></a>generator&amp;nonce</h2><p>generator是记录在shsh2文件中的一串值，这串值对应着一个nonce。nonce是一个只能使用一次的随机数。它在认证协议中用于阻止重放攻击。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><blockquote>
+<p>iOS/iTunes 在更新设备固件的过程中，会将设备的 ECID，系统版本等信息，以及一个一次使用的 Nonce 发送给 Apple 的验证服务器，服务器在校验通过后，会返回校验结果给 iOS/iTunes，结果使用非对称算法加密，在没有私钥的情况下无法解密，也无法伪造。</p>
+</blockquote>
+<blockquote>
+<p>但是，我们可以将校验结果保存下来，之后 Apple 不再提供此版本校验的时候（假设不考虑 SEP 兼容性），在越狱后通过 nvram 固定 nonce 为此校验结果使用的，来重放校验过程，实现 iOS 系统降级/更新到不提供验证的版本。</p>
+</blockquote>
+<p>简单理解，备份的shsh2文件对应着一个nonce，在恢复到低版本的时候，先固定shsh2对应的nonce，然后绕过校验进行固件恢复</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/16/%E4%BD%BF%E7%94%A8futurerestore%E6%81%A2%E5%A4%8D%E5%88%B0%E4%BD%8E%E7%89%88%E6%9C%ACiOS%E7%B3%BB%E7%BB%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/16/iOS%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/16/iOS%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">iOS内存管理</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-16 19:27:19" itemprop="dateCreated datePublished" datetime="2020-01-16T19:27:19+08:00">2020-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="内存使用"><a href="#内存使用" class="headerlink" title="内存使用"></a>内存使用</h1><p>应用的内存消耗主要分为两部分：栈大小和堆大小</p>
+<h2 id="栈大小"><a href="#栈大小" class="headerlink" title="栈大小"></a>栈大小</h2><p>应用中的每个线程都有专用的栈空间，栈可以在线程存在期间自由使用。线程的最大栈空间很小，因此有很多限制</p>
+<ul>
+<li>限制递归调用的最大方法数</li>
+<li>方法中使用的参数个数和内部变量个数</li>
+<li>视图层级的最大深度</li>
+<li>…</li>
+</ul>
+<h2 id="堆大小"><a href="#堆大小" class="headerlink" title="堆大小"></a>堆大小</h2><p>每个进程的所有线程共享一个堆。OC对象如NSString、UIImage、视图等都会消耗堆内存。<strong>大多数情况下，OC对象存放在堆中</strong>,<strong>与通过类创建的对象相关的所有数据也都存放在堆中</strong>。</p>
+<h1 id="内存管理模型"><a href="#内存管理模型" class="headerlink" title="内存管理模型"></a>内存管理模型</h1><p>苹果LLVM官方文档使用术语<code>持有关系</code>和<code>引用计数</code>来描述OC对象的内存管理。</p>
+<p>如果一个对象处于被持有状态，那么它占用的内存就不能被回收。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/16/iOS%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/14/%E9%80%86%E5%90%91%E8%8E%B7%E5%8F%96Block%E5%AF%B9%E5%BA%94%E5%87%BD%E6%95%B0%E5%85%A5%E5%8F%A3%E5%92%8C%E5%87%BD%E6%95%B0%E7%AD%BE%E5%90%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/14/%E9%80%86%E5%90%91%E8%8E%B7%E5%8F%96Block%E5%AF%B9%E5%BA%94%E5%87%BD%E6%95%B0%E5%85%A5%E5%8F%A3%E5%92%8C%E5%87%BD%E6%95%B0%E7%AD%BE%E5%90%8D/" class="post-title-link" itemprop="url">逆向获取Block对应函数入口和函数签名</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-14 19:37:46" itemprop="dateCreated datePublished" datetime="2020-01-14T19:37:46+08:00">2020-01-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%80%86%E5%90%91/" itemprop="url" rel="index">
+                    <span itemprop="name">逆向</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="逆向获取block对应函数入口和函数签名"><a href="#逆向获取block对应函数入口和函数签名" class="headerlink" title="逆向获取block对应函数入口和函数签名"></a>逆向获取block对应函数入口和函数签名</h1><p>在逆向分析App的时候，有时会遇到某个关键方法中传入一个block参数来做回调，class-dump无法解析出block的类型以及函数签名。了解过block本质及其内存模型后，就可以通过lldb动态调试来获取目标信息</p>
+<h1 id="block的内存结构"><a href="#block的内存结构" class="headerlink" title="block的内存结构"></a>block的内存结构</h1><p>在LLVM文档中，找到block的实现规范<a href="http://clang.llvm.org/docs/Block-ABI-Apple.html" target="_blank" rel="noopener">Block Implementation Specification</a>,找到block内存结构的定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Block_literal_1</span> &#123;</span></span><br><span class="line">    <span class="keyword">void</span> *isa; <span class="comment">// initialized to &amp;_NSConcreteStackBlock or &amp;_NSConcreteGlobalBlock</span></span><br><span class="line">    <span class="keyword">int</span> flags;</span><br><span class="line">    <span class="keyword">int</span> reserved;</span><br><span class="line">    <span class="keyword">void</span> (*invoke)(<span class="keyword">void</span> *, ...);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Block_descriptor_1</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">int</span> reserved;         <span class="comment">// NULL</span></span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">int</span> <span class="built_in">size</span>;         <span class="comment">// sizeof(struct Block_literal_1)</span></span><br><span class="line">        <span class="comment">// optional helper functions</span></span><br><span class="line">        <span class="keyword">void</span> (*copy_helper)(<span class="keyword">void</span> *dst, <span class="keyword">void</span> *src);     <span class="comment">// IFF (1&lt;&lt;25)</span></span><br><span class="line">        <span class="keyword">void</span> (*dispose_helper)(<span class="keyword">void</span> *src);             <span class="comment">// IFF (1&lt;&lt;25)</span></span><br><span class="line">        <span class="comment">// required ABI.2010.3.16</span></span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">char</span> *signature;                         <span class="comment">// IFF (1&lt;&lt;30)</span></span><br><span class="line">    &#125; *descriptor;</span><br><span class="line">    <span class="comment">// imported variables</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>其中block对应的实现函数地址入口和函数签名分别在<code>void (*invoke)(void *, ...);</code>和<code>descriptor</code>中的<code>const char *signature;</code>中保存</p>
+<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p>某app中的某个带block参数的方法</p>
+<p><code>- (void)parseRequest:(id)arg1 result:(id)arg2 completion:(id)arg3;</code></p>
+<p>祭出debugserver和lldb</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/14/%E9%80%86%E5%90%91%E8%8E%B7%E5%8F%96Block%E5%AF%B9%E5%BA%94%E5%87%BD%E6%95%B0%E5%85%A5%E5%8F%A3%E5%92%8C%E5%87%BD%E6%95%B0%E7%AD%BE%E5%90%8D/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/11/Block/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/11/Block/" class="post-title-link" itemprop="url">Block</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-11 20:58:22" itemprop="dateCreated datePublished" datetime="2020-01-11T20:58:22+08:00">2020-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="block"><a href="#block" class="headerlink" title="block"></a>block</h1><p>block是OC对闭包的实现，闭包的定义如下:</p>
+<blockquote>
+<p>在计算机科学中，闭包（英语：Closure），又称词法闭包（Lexical Closure）或函数闭包（function closures），是引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。所以，有另一种说法认为闭包是由函数和与其相关的引用环境组合而成的实体。闭包在运行时可以有多个实例，不同的引用环境和相同的函数组合可以产生不同的实例。</p>
+</blockquote>
+<p>block用来实现匿名函数的特性，是一种特殊数据类型，可以定义为变量、作为参数、作为返回值，一般用来保存一段代码，在需要的时候回调，在iOS中广泛使用，如GCD、动画变换、网络回调等等</p>
+<h1 id="block基础"><a href="#block基础" class="headerlink" title="block基础"></a>block基础</h1><p>表达式</p>
+<p><code>returnType (^blockName)(parameterTypes)</code></p>
+<h2 id="block变量声明"><a href="#block变量声明" class="headerlink" title="block变量声明"></a>block变量声明</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//声明无返回值，参数为空，名为aBlock的block变量</span></span><br><span class="line"><span class="keyword">void</span>(^aBlock)(<span class="keyword">void</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//声明无返回值，参数为一个NSString对象，名为aBlock的block变量</span></span><br><span class="line"><span class="keyword">void</span>(^aBlock)(<span class="built_in">NSString</span> *aString);</span><br><span class="line"></span><br><span class="line"><span class="comment">//其中形参名可省略</span></span><br><span class="line"><span class="keyword">void</span>(^aBlock)(<span class="built_in">NSString</span> *);</span><br></pre></td></tr></table></figure>
+
+<h2 id="block变量赋值"><a href="#block变量赋值" class="headerlink" title="block变量赋值"></a>block变量赋值</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/11/Block/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/04/%E7%B1%BBReveal%E8%A7%86%E5%9B%BE%E5%88%86%E6%9E%90App%E2%80%94%E2%80%94Lookin/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -258,10 +920,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-01-04 16:34:52 / 修改时间：17:11:14" itemprop="dateCreated datePublished" datetime="2020-01-04T16:34:52+08:00">2020-01-04</time>
+              <time title="创建时间：2020-01-04 16:34:52" itemprop="dateCreated datePublished" datetime="2020-01-04T16:34:52+08:00">2020-01-04</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -339,18 +1007,24 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-01-04 13:03:10 / 修改时间：13:07:34" itemprop="dateCreated datePublished" datetime="2020-01-04T13:03:10+08:00">2020-01-04</time>
+              <time title="创建时间：2020-01-04 13:03:10" itemprop="dateCreated datePublished" datetime="2020-01-04T13:03:10+08:00">2020-01-04</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Macos/" itemprop="url" rel="index">
-                    <span itemprop="name">Macos</span>
+                  <a href="/categories/MacOS/" itemprop="url" rel="index">
+                    <span itemprop="name">MacOS</span>
                   </a>
                 </span>
             </span>
@@ -401,7 +1075,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/31/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91-VideoDownloaderCN/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/02/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.png">
@@ -415,7 +1089,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/12/31/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91-VideoDownloaderCN/" class="post-title-link" itemprop="url">越狱插件开发-VideoDownloaderCN</a>
+            <a href="/2020/01/02/hello-world/" class="post-title-link" itemprop="url">Hello World	<!-- 文章标题 --></a>
         </h1>
 
         <div class="post-meta">
@@ -425,118 +1099,8 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-12-31 16:51:17" itemprop="dateCreated datePublished" datetime="2019-12-31T16:51:17+08:00">2019-12-31</time>
+              <time title="创建时间：2020-01-02 13:46:14" itemprop="dateCreated datePublished" datetime="2020-01-02T13:46:14+08:00">2020-01-02</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-04 13:05:09" itemprop="dateModified" datetime="2020-01-04T13:05:09+08:00">2020-01-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%80%86%E5%90%91/" itemprop="url" rel="index">
-                    <span itemprop="name">逆向</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>原创文章搬运</p>
-<p>学习逆向有一段时间了，想着写个iOS Jailbreak Tweak练练手，平时比较喜欢看视频，看到比较搞笑的视频想保存下载发给好友，无奈无法下载，于是有了这个<strong>VideoDownloaderCN</strong>插件。</p>
-<p><strong>声明 ： 插件仅用于技术研究</strong></p>
-<div align="center">
-    <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/tweak.png" width="50%">
-    <br>
-    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
-        display: inline-block;
-        color: #999;
-        padding: 2px;">插件界面
-    </div>
-</div>
-
-<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>最近分析几个App上的视频播放，基本上就是一个View上有个播放组件，而这个View或者它的若干个nextResponder持有这个视频的url，于是有这样的思路：</p>
-<ul>
-<li>动态分析定位得到视频的URL</li>
-<li>在View的构造方法内添加一个手势弹出下载</li>
-<li>手势对应视频下载的方法实现，最后移动到系统相册</li>
-</ul>
-<p>分析方法用到:<strong>Cycript动态调试</strong>、<strong>Reveal界面分析</strong>、<strong>class-dump头文件</strong></p>
-<p>分析过程不在这里描述，主要mark一下Tweak的构建工程.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/12/31/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91-VideoDownloaderCN/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/31/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="kinken">
-      <meta itemprop="description" content="笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kinken">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/31/hello-world/" class="post-title-link" itemprop="url">Hello World	<!-- 文章标题 --></a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-12-31 11:17:58" itemprop="dateCreated datePublished" datetime="2019-12-31T11:17:58+08:00">2019-12-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-02 13:46:14" itemprop="dateModified" datetime="2020-01-02T13:46:14+08:00">2020-01-02</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -570,7 +1134,7 @@
 <h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2019/12/31/hello-world/#more" rel="contents">
+              <a class="btn" href="/2020/01/02/hello-world/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -593,6 +1157,9 @@
   </div>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -659,20 +1226,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

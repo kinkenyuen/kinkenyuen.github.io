@@ -69,25 +69,25 @@
   <meta name="description" content="笔记">
 <meta property="og:type" content="website">
 <meta property="og:title" content="kinken">
-<meta property="og:url" content="http://yoursite.com/categories/%E6%95%99%E7%A8%8B-%E5%88%86%E7%B1%BB/index.html">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="kinken">
 <meta property="og:description" content="笔记">
 <meta property="article:author" content="kinken">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/categories/%E6%95%99%E7%A8%8B-%E5%88%86%E7%B1%BB/">
+<link rel="canonical" href="http://yoursite.com/page/2/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
+    isHome: true,
     isPost: false
   };
 </script>
 
-  <title>分类: 教程 		<!-- 分类 --> | kinken</title>
+  <title>kinken</title>
   
 
 
@@ -230,49 +230,116 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+        
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h1 class="collection-header">教程 		<!-- 分类 -->
-          <small>分类</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/31/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91-VideoDownloaderCN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="kinken">
+      <meta itemprop="description" content="笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kinken">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/31/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91-VideoDownloaderCN/" class="post-title-link" itemprop="url">越狱插件开发-VideoDownloaderCN</a>
         </h1>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-31 16:51:17" itemprop="dateCreated datePublished" datetime="2019-12-31T16:51:17+08:00">2019-12-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%80%86%E5%90%91/" itemprop="url" rel="index">
+                    <span itemprop="name">逆向</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2020</h1>
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>原创文章搬运</p>
+<p>学习逆向有一段时间了，想着写个iOS Jailbreak Tweak练练手，平时比较喜欢看视频，看到比较搞笑的视频想保存下载发给好友，无奈无法下载，于是有了这个<strong>VideoDownloaderCN</strong>插件。</p>
+<p><strong>声明 ： 插件仅用于技术研究</strong></p>
+<div align="center">
+    <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/tweak.png" width="50%">
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+        display: inline-block;
+        color: #999;
+        padding: 2px;">插件界面
+    </div>
+</div>
+
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>最近分析几个App上的视频播放，基本上就是一个View上有个播放组件，而这个View或者它的若干个nextResponder持有这个视频的url，于是有这样的思路：</p>
+<ul>
+<li>动态分析定位得到视频的URL</li>
+<li>在View的构造方法内添加一个手势弹出下载</li>
+<li>手势对应视频下载的方法实现，最后移动到系统相册</li>
+</ul>
+<p>分析方法用到:<strong>Cycript动态调试</strong>、<strong>Reveal界面分析</strong>、<strong>class-dump头文件</strong></p>
+<p>分析过程不在这里描述，主要mark一下Tweak的构建工程.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/31/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91-VideoDownloaderCN/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-01-02T13:46:14+08:00"
-              content="2020-01-02">
-          01-02
-        </time>
-      </div>
-
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/01/02/hello-world/" itemprop="url">
-            <span itemprop="name">Hello World	<!-- 文章标题 --></span>
-          </a>
-      </h2>
-
-    </header>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 
 

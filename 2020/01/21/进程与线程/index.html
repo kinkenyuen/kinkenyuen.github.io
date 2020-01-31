@@ -66,21 +66,19 @@
         border-left-color: #1E92FB;    /*左边框颜色*/
     }
 </style>
-  <meta name="description" content="简介Lookin是一个免费的iOS UI层次分析App，相比Reveal,它不仅能获取视图控件对应的成员变量名称，而且可以做一些简单的UI之外的动态调试 安装Mac端直接从官网下载App即可 iPhone端配合越狱设备使用更快捷,类似于Reveal，使用越狱插件为目标App注入LookinServer.framework LookinLoader                Lookin">
+  <meta name="description" content="进程和线程进程和线程在操作系统中是比较重要的内容，面试中的基础提问也经常会出现，如进程和线程的区别等等，如果没有仔细梳理，还真的很难说清楚。本文仅列出进程和线程的基本内容及区别。 在一些操作系统的书籍中，通常会介绍到多任务系统，现代的操作系统基本都是支持 “多任务”，简单地说，多任务指的是操作系统可以同时运行多个任务。比如我现在一边在MacDown写东西，一边听音乐，一边在用浏览器看文章。 现在，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="类Reveal视图分析App——Lookin">
-<meta property="og:url" content="http://yoursite.com/2020/01/04/%E7%B1%BBReveal%E8%A7%86%E5%9B%BE%E5%88%86%E6%9E%90App%E2%80%94%E2%80%94Lookin/index.html">
+<meta property="og:title" content="进程与线程">
+<meta property="og:url" content="http://yoursite.com/2020/01/21/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/index.html">
 <meta property="og:site_name" content="kinken">
-<meta property="og:description" content="简介Lookin是一个免费的iOS UI层次分析App，相比Reveal,它不仅能获取视图控件对应的成员变量名称，而且可以做一些简单的UI之外的动态调试 安装Mac端直接从官网下载App即可 iPhone端配合越狱设备使用更快捷,类似于Reveal，使用越狱插件为目标App注入LookinServer.framework LookinLoader                Lookin">
-<meta property="og:image" content="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/Lookin.jpg">
-<meta property="article:published_time" content="2020-01-04T08:34:52.000Z">
-<meta property="article:modified_time" content="2020-01-31T12:32:43.814Z">
+<meta property="og:description" content="进程和线程进程和线程在操作系统中是比较重要的内容，面试中的基础提问也经常会出现，如进程和线程的区别等等，如果没有仔细梳理，还真的很难说清楚。本文仅列出进程和线程的基本内容及区别。 在一些操作系统的书籍中，通常会介绍到多任务系统，现代的操作系统基本都是支持 “多任务”，简单地说，多任务指的是操作系统可以同时运行多个任务。比如我现在一边在MacDown写东西，一边听音乐，一边在用浏览器看文章。 现在，">
+<meta property="article:published_time" content="2020-01-21T06:18:04.000Z">
+<meta property="article:modified_time" content="2020-01-31T12:32:43.815Z">
 <meta property="article:author" content="kinken">
-<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="操作系统">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/Lookin.jpg">
 
-<link rel="canonical" href="http://yoursite.com/2020/01/04/%E7%B1%BBReveal%E8%A7%86%E5%9B%BE%E5%88%86%E6%9E%90App%E2%80%94%E2%80%94Lookin/">
+<link rel="canonical" href="http://yoursite.com/2020/01/21/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">
 
 
 <script id="page-configurations">
@@ -92,7 +90,7 @@
   };
 </script>
 
-  <title>类Reveal视图分析App——Lookin | kinken</title>
+  <title>进程与线程 | kinken</title>
   
 
 
@@ -240,7 +238,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/04/%E7%B1%BBReveal%E8%A7%86%E5%9B%BE%E5%88%86%E6%9E%90App%E2%80%94%E2%80%94Lookin/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/21/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.png">
@@ -253,7 +251,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          类Reveal视图分析App——Lookin
+          进程与线程
         </h1>
 
         <div class="post-meta">
@@ -263,7 +261,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-01-04 16:34:52" itemprop="dateCreated datePublished" datetime="2020-01-04T16:34:52+08:00">2020-01-04</time>
+              <time title="创建时间：2020-01-21 14:18:04" itemprop="dateCreated datePublished" datetime="2020-01-21T14:18:04+08:00">2020-01-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -278,8 +276,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iOS/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS</span>
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
                   </a>
                 </span>
             </span>
@@ -302,11 +300,65 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="https://lookin.work/" target="_blank" rel="noopener">Lookin</a>是一个免费的iOS UI层次分析App，相比Reveal,它不仅能获取视图控件对应的成员变量名称，而且可以做一些简单的UI之外的动态调试</p>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>Mac端直接从官网下载App即可</p>
-<h1 id="iPhone端"><a href="#iPhone端" class="headerlink" title="iPhone端"></a>iPhone端</h1><p>配合越狱设备使用更快捷,类似于Reveal，使用越狱插件为目标App注入<code>LookinServer.framework</code></p>
-<p><a href="https://github.com/creantan/LookinLoader" target="_blank" rel="noopener">LookinLoader</a></p>
-<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/Lookin.jpg" width=50% />     <br>     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">Lookin</div> </div>
+        <h1 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h1><p>进程和线程在操作系统中是比较重要的内容，面试中的基础提问也经常会出现，如进程和线程的区别等等，如果没有仔细梳理，还真的很难说清楚。本文仅列出进程和线程的基本内容及区别。</p>
+<p>在一些操作系统的书籍中，通常会介绍到<strong>多任务系统</strong>，现代的操作系统基本都是支持 “多任务”，简单地说，多任务指的是操作系统可以同时运行多个任务。比如我现在一边在<code>MacDown</code>写东西，一边听音乐，一边在用浏览器看文章。</p>
+<p>现在，多核CPU非常普及，在这之前使用的单核CPU，也是可以执行多任务，由于CPU执行代码都是顺序执行，那么单核CPU如何执行多任务？答案是操作系统按一定时间分配CPU给任务1、任务2…，任务之间交替使用CPU执行，由于CPU的执行速度快且任务之间的切换时间间隔很短，因此就有多个任务同时执行一样。</p>
+<p>在多核CPU上能够实现真正的并行执行多任务，操作系统自动把多个任务轮流调度到CPU的每个核心上执行。</p>
+<p>对操作系统而言，一个任务就是一个进程（Process）。进程有可能不止同时做一件事，比如音乐播放器可以一边播放音乐，一边搜索歌曲。在进程内部同时执行的多个“子任务”，它们是在多个线程（Thread）上执行。</p>
+<p>所以，进程至少有一个线程。同样地，在单核CPU中，多个线程之间可以快速切换实现多线程并发；在多核CPU中，多个线程在不同核心上执行，实现了多线程并行。</p>
+<table>
+<thead>
+<tr>
+<th>CPU</th>
+<th>进程</th>
+<th>线程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单核</td>
+<td>多进程并发，多个进程时间片轮换</td>
+<td>多线程并发，同一进程内的线程轮换</td>
+</tr>
+<tr>
+<td>多核</td>
+<td>并行，不同进程的线程使用不同核心</td>
+<td>并行，多个线程使用不同的核心</td>
+</tr>
+</tbody></table>
+<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>程序本身只是指令、数据及其组织形式的描述，进程才是程序的真正运行实例。在分时系统中，进程是基本的运作单位，但是在当代多数面向线程设计的系统中，进程本身不是基本运行单位，而是线程的容器。进程内包含一个或多个线程（每一个线程都代表一个进程内的一个独立执行上下文）</p>
+<h2 id="进程内容"><a href="#进程内容" class="headerlink" title="进程内容"></a>进程内容</h2><p>一个进程可以包括下列数据:</p>
+<ul>
+<li>程序可执行文件二进制在内存中的映像</li>
+<li>分配到的内存（通常是虚拟内存）。虚拟内存中包括可执行代码、调用堆栈、堆栈</li>
+<li>分配给该进程的资源的操作系统描述符，诸如文件描述符（Unix术语）或文件句柄（Windows）、数据源和数据终端。</li>
+<li>安全特性，诸如进程拥有者和进程的权限集（可以容许的操作）。</li>
+<li>处理器状态（内文），诸如寄存器内容、物理存储器定址等。当进程正在运行时，状态通常存储在寄存器，其他情况在存储器。</li>
+</ul>
+<h2 id="进程状态"><a href="#进程状态" class="headerlink" title="进程状态"></a>进程状态</h2><ul>
+<li>新生（new）：进程新产生中。</li>
+<li>运行（running）：正在运行。</li>
+<li>等待（waiting）：等待某事发生，例如等待用户输入完成。亦称“阻塞”（blocked）</li>
+<li>就绪（ready）：排队中，等待CPU。</li>
+<li>结束（terminated）：完成运行。</li>
+</ul>
+<p>各状态名称可能随不同操作系统而相异；对于单CPU系统（UP），任何时间可能有多个进程为等待、就绪，但必定仅有一个进程在运行。</p>
+<p>注意: 进程的各个状态之间是不能随意切换的，例如当进程运行时因IO操作而阻塞，当IO操作完成后并不会直接恢复回运行态，而是转为就绪态等待CPU的调度。</p>
+<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><p>大部分情况下，线程被包含在进程之中，是进程中的实际运行单位。一条线程是指进程中一个单一顺序的指令流。在多核CPU中，一个进程中可以并发多个线程，每条线程并行执行不同任务。<strong>同一进程中的多条线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等等。但同一进程中的多个线程有各自的调用栈(call stack)，自己的寄存器环境(register context)，自己的线程本地存储(thread-local storage)</strong>。</p>
+<h2 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h2><ul>
+<li>产生（spawn）</li>
+<li>中断（block）</li>
+<li>非中断（unblock）</li>
+<li>结束（finish）</li>
+</ul>
+<h1 id="联系与区别"><a href="#联系与区别" class="headerlink" title="联系与区别"></a>联系与区别</h1><ul>
+<li>进程比线程携带更多状态信息，而一个进程中的多个线程共享进程状态和其他资源</li>
+<li>进程有独立的地址空间，而线程共享进程的地址空间</li>
+<li>进程通过系统提供的进程间通信机制进行交互</li>
+<li>进程中的线程间上下文切换通常比进程之间上下文切换要快</li>
+</ul>
+<h1 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h1><p><a href="https://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html" target="_blank" rel="noopener">进程与线程的一个简单解释</a></p>
+<p><a href="http://www.qnx.com/developers/docs/6.4.1/neutrino/getting_started/s1_procs.html" target="_blank" rel="noopener">Processes and Threads</a></p>
+
     </div>
 
     
@@ -316,7 +368,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/iOS/" rel="tag"><i class="fa fa-tag"></i> iOS</a>
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
           </div>
 
         
@@ -325,13 +377,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/01/04/%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AEiTerm2%E4%B8%8EZsh/" rel="prev" title="简单配置iTerm2与Zsh">
-      <i class="fa fa-chevron-left"></i> 简单配置iTerm2与Zsh
+    <a href="/2020/01/21/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/" rel="prev" title="内存分配">
+      <i class="fa fa-chevron-left"></i> 内存分配
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/01/11/Block/" rel="next" title="Block">
-      Block <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -392,7 +441,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iPhone端"><span class="nav-number">3.</span> <span class="nav-text">iPhone端</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程和线程"><span class="nav-number">1.</span> <span class="nav-text">进程和线程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程"><span class="nav-number">2.</span> <span class="nav-text">进程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程内容"><span class="nav-number">2.1.</span> <span class="nav-text">进程内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程状态"><span class="nav-number">2.2.</span> <span class="nav-text">进程状态</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程"><span class="nav-number">3.</span> <span class="nav-text">线程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程状态"><span class="nav-number">3.1.</span> <span class="nav-text">线程状态</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#联系与区别"><span class="nav-number">4.</span> <span class="nav-text">联系与区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关文章"><span class="nav-number">5.</span> <span class="nav-text">相关文章</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -558,7 +607,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo: 'kinkenyuen.github.io',
       owner: 'kinkenyuen',
       admin: ['kinkenyuen'],
-      id: 'be37a0cd81bdc7aa0a451861f6630da9',
+      id: 'b8e4c04cb33416bf94a6b27125da8d9b',
         language: '',
       distractionFreeMode: true
     });

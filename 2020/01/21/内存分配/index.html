@@ -32,7 +32,7 @@
     version: '7.6.0',
     exturl: false,
     sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
+    copycode: {"enable":true,"show_result":true,"style":null},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
     bookmark: {"enable":false,"color":"#222","save":"auto"},
     fancybox: true,
@@ -66,19 +66,21 @@
         border-left-color: #1E92FB;    /*左边框颜色*/
     }
 </style>
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="内存分配在早期的计算机中，程序是直接运行在物理内存上，也就是说，程序运行时所访问的地址都是物理地址，如果计算机只运行一个程序且该程序所需的内存空间不超过物理内存大小，就不会有问题。现在计算机需要同时运行多个程序，那么如何将有限的物理内存分配给多个程序使用？ 直接分配的弊端假设一台计算机有64MB内存，程序A运行需要50MB，程序运行需要10MB，需要同时运行这两个程序，比较直接的做法就是将0MB~">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World	&lt;!-- 文章标题 --&gt;">
-<meta property="og:url" content="http://yoursite.com/2019/12/31/hello-world/index.html">
+<meta property="og:title" content="内存分配">
+<meta property="og:url" content="http://yoursite.com/2020/01/21/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/index.html">
 <meta property="og:site_name" content="kinken">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta property="article:published_time" content="2019-12-31T03:17:58.753Z">
-<meta property="article:modified_time" content="2020-01-02T05:46:14.088Z">
+<meta property="og:description" content="内存分配在早期的计算机中，程序是直接运行在物理内存上，也就是说，程序运行时所访问的地址都是物理地址，如果计算机只运行一个程序且该程序所需的内存空间不超过物理内存大小，就不会有问题。现在计算机需要同时运行多个程序，那么如何将有限的物理内存分配给多个程序使用？ 直接分配的弊端假设一台计算机有64MB内存，程序A运行需要50MB，程序运行需要10MB，需要同时运行这两个程序，比较直接的做法就是将0MB~">
+<meta property="og:image" content="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E6%AE%B5%E6%98%A0%E5%B0%84.png">
+<meta property="article:published_time" content="2020-01-21T06:16:24.000Z">
+<meta property="article:modified_time" content="2020-01-31T12:32:43.813Z">
 <meta property="article:author" content="kinken">
-<meta property="article:tag" content="模板 				&lt;!-- 标签 --&gt;">
+<meta property="article:tag" content="操作系统">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%88%86%E6%AE%B5%E6%98%A0%E5%B0%84.png">
 
-<link rel="canonical" href="http://yoursite.com/2019/12/31/hello-world/">
+<link rel="canonical" href="http://yoursite.com/2020/01/21/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/">
 
 
 <script id="page-configurations">
@@ -90,7 +92,7 @@
   };
 </script>
 
-  <title>Hello World	<!-- 文章标题 --> | kinken</title>
+  <title>内存分配 | kinken</title>
   
 
 
@@ -238,7 +240,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/31/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/21/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.png">
@@ -251,7 +253,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World	<!-- 文章标题 -->
+          内存分配
         </h1>
 
         <div class="post-meta">
@@ -261,14 +263,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-12-31 11:17:58" itemprop="dateCreated datePublished" datetime="2019-12-31T11:17:58+08:00">2019-12-31</time>
+              <time title="创建时间：2020-01-21 14:16:24" itemprop="dateCreated datePublished" datetime="2020-01-21T14:16:24+08:00">2020-01-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-02 13:46:14" itemprop="dateModified" datetime="2020-01-02T13:46:14+08:00">2020-01-02</time>
+                <time title="修改时间：2020-01-31 20:32:43" itemprop="dateModified" datetime="2020-01-31T20:32:43+08:00">2020-01-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -276,8 +278,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%99%E7%A8%8B-%E5%88%86%E7%B1%BB/" itemprop="url" rel="index">
-                    <span itemprop="name">教程 		<!-- 分类 --></span>
+                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
                   </a>
                 </span>
             </span>
@@ -300,19 +302,28 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+        <h1 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h1><p>在早期的计算机中，程序是直接运行在物理内存上，也就是说，程序运行时所访问的地址都是物理地址，如果计算机只运行一个程序且该程序所需的内存空间不超过物理内存大小，就不会有问题。现在计算机需要同时运行多个程序，那么如何将有限的物理内存分配给多个程序使用？</p>
+<h1 id="直接分配的弊端"><a href="#直接分配的弊端" class="headerlink" title="直接分配的弊端"></a>直接分配的弊端</h1><p>假设一台计算机有64MB内存，程序A运行需要50MB，程序运行需要10MB，需要同时运行这两个程序，比较直接的做法就是将0MB~50MB分配给A，50MB~60MB分配给B。</p>
+<p>这样的分配策略会带来很多问题:</p>
+<ul>
+<li><strong>地址空间不隔离</strong> 所有程序都直接访问物理地址，程序之间使用的地址空间共享物理内存，很容易发生恶意程序改写其他程序内存数据的情况；另外本身有bug的程序也有可能影响到其他程序的执行。这造成了程序运行不稳定的情况。</li>
+<li><strong>程序运行时地址不确定</strong>  在程序装入运行时，需要分配一块足够大的空闲区域，而这个位置不确定，那么在程序编写时，指令的跳转需要你自己计算得出绝对地址，这是十分麻烦的。</li>
+<li><strong>内存使用效率低</strong> 执行一个程序就将整个程序加载到内存，若需要继续同时执行另外的程序，则会出现内存不足，这时只能将内存中现有的数据换出到磁盘，磁盘、内存之间的大容量的换出换入必会导致效率低下</li>
+</ul>
+<h1 id="如何解决直接分配的弊端"><a href="#如何解决直接分配的弊端" class="headerlink" title="如何解决直接分配的弊端"></a>如何解决直接分配的弊端</h1><h2 id="解决地址空间不隔离和程序运行时地址不确定"><a href="#解决地址空间不隔离和程序运行时地址不确定" class="headerlink" title="解决地址空间不隔离和程序运行时地址不确定"></a>解决地址空间不隔离和程序运行时地址不确定</h2><p>从程序执行的角度看，我们不希望它介入到复杂得内存分配过程中，我们希望一个程序在执行的时候只需要一个简单得执行环境（独立单一的地址空间、单一的CPU，不用关心其他程序）。</p>
+<p>可以把地址空间想象成一个很大的数组，数组大小取决于地址空间的地址长度，如64位的地址空间为<code>2^64 = 18446744073709551616</code>，一般用十六进制表示<code>0x0000000000000000~0xFFFFFFFFFFFFFFFF</code></p>
+<p>地址空间分为<strong>物理地址空间</strong>和<strong>虚拟地址空间</strong>。</p>
+<p>可以把物理地址空间想象成物理内存，它是实实在在存在，存在于计算机中。物理地址空间范围与设备的内存大小相关。</p>
+<p>虚拟地址是指人们想象出来的并不存在的，每个进程都有自己独立的虚拟空间，且每个进程只能访问自己的地址空间。</p>
+<p>使用虚拟地址空间和分段解决地址空间不隔离和程序运行时地址不确定</p>
+<div align=center>     <img src="https://kinkenyuen.oss-cn-shenzhen.aliyuncs.com/images/虚拟内存分段映射.png" width="800" />     <div style="color:orange; border-bottom: 1px solid #d9d9d9;         display: inline-block;         color: #999;         padding: 2px;">虚拟内存分段映射</div> </div>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<p>虚拟地址和物理地址通过映射函数来转换，通常由CPU转换，当程序访问超出虚拟地址空间的地址时，硬件会判断出非法访问并拒绝访问。由此，编写程序只需要在虚拟地址空间内即可（实质上是程序编写完才有一个虚拟地址空间）。</p>
+<p>内存分段没有解决内存使用效率问题，因为换出数据到磁盘仍需要整页换出，为了解决这个问题，使用更细粒度的划分——分页</p>
+<h2 id="使用分页解决内存使用效率低"><a href="#使用分页解决内存使用效率低" class="headerlink" title="使用分页解决内存使用效率低"></a>使用分页解决内存使用效率低</h2><p>根据程序的局部性原理，当一个程序执行时，并不是所有数据都需要在一个时刻使用，因此可以按需将内容装载到内存中。</p>
+<p>目前大部分操作系统都使用4KB大小的页。按照这个页大小将需要执行的程序虚拟内存空间分成多页，并把需要使用的页映射到内存，这就能使多个程序的分页同时装载到物理内存中，提高了内存使用效率。当程序执行到不在物理内存的分页时，就会出现<strong>页错误(Page Fault)</strong>，然后操作系统将进程需要的页装载映射到物理内存。</p>
+<p>页保护，每个页可以设置权限属性，谁可以修改、访问等，只有<strong>操作系统</strong>有权限修改这些属性。</p>
 
     </div>
 
@@ -323,7 +334,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E6%A8%A1%E6%9D%BF-%E6%A0%87%E7%AD%BE/" rel="tag"><i class="fa fa-tag"></i> 模板 				<!-- 标签 --></a>
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 操作系统</a>
           </div>
 
         
@@ -331,10 +342,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2019/12/31/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91-VideoDownloaderCN/" rel="next" title="越狱插件开发-VideoDownloaderCN">
-      越狱插件开发-VideoDownloaderCN <i class="fa fa-chevron-right"></i>
+    <a href="/2020/01/17/%E6%8E%A2%E7%B4%A2autoreleasepool/" rel="prev" title="探索autoreleasepool">
+      <i class="fa fa-chevron-left"></i> 探索autoreleasepool
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/01/21/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" rel="next" title="进程与线程">
+      进程与线程 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -396,7 +410,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#内存分配"><span class="nav-number">1.</span> <span class="nav-text">内存分配</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#直接分配的弊端"><span class="nav-number">2.</span> <span class="nav-text">直接分配的弊端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何解决直接分配的弊端"><span class="nav-number">3.</span> <span class="nav-text">如何解决直接分配的弊端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解决地址空间不隔离和程序运行时地址不确定"><span class="nav-number">3.1.</span> <span class="nav-text">解决地址空间不隔离和程序运行时地址不确定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用分页解决内存使用效率低"><span class="nav-number">3.2.</span> <span class="nav-text">使用分页解决内存使用效率低</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -412,20 +426,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -562,7 +576,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo: 'kinkenyuen.github.io',
       owner: 'kinkenyuen',
       admin: ['kinkenyuen'],
-      id: 'd82702b63c96bd7db07ce5fa888796a5',
+      id: '426c0bd1627354cf2e8a336acd4f8bea',
         language: '',
       distractionFreeMode: true
     });
