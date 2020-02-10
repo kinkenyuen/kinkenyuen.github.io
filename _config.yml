@@ -143,3 +143,6 @@ path: search.xml
 field: post
 format: html
 limit: 10000
+
+encrypt:
+    enable: true
